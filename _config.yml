@@ -1,12 +1,12 @@
 # Site settings
-title: 'Laurens Geffert'
+title: 'Miguel Tomás'
 description: 'A collection of personal Data Science projects'
 url: 'https://aeonSolutions.github.io'
 baseurl: 'https://aeonSolutions.github.io/'
 title_image: 'https://aeonSolutions.github.io/images/profile.png'
 # for offline build baseurl: ''
-google_analytics: 'UA-104096144-1'
-disqus_shortname: 'aeonSolutions.disqus.com'
+google_analytics: 'UA-180851356-1'
+disqus_shortname: ''
 
 author:
   name: 'Miguel Tomás'
