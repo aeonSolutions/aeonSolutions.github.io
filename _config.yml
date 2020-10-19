@@ -1,6 +1,6 @@
 # Site settings
 title: 'Miguel Tomás'
-description: 'A collection of personal Data Science projects'
+description: 'this this my public profile page'
 url: 'https://aeonSolutions.github.io'
 baseurl: 'https://aeonSolutions.github.io/'
 title_image: 'https://aeonSolutions.github.io/images/profile.png'
@@ -14,7 +14,7 @@ author:
   github_username:  aeonSolutions
   twitter_username: Aeonlabs.solutions
   linkedin_username:  migueltomas
-  stackoverflow_username: 13794189
+  stackoverflow_username: miguel-silva
   kaggle_username: aeonSolutions
   googlescholar_username: IkngnVcAAAAJ
 
