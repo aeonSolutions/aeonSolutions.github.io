@@ -1,0 +1,44 @@
+# Site settings
+title: 'Laurens Geffert'
+description: 'A collection of personal Data Science projects'
+url: 'https://janlauge.github.io'
+baseurl: 'https://janlauge.github.io/'
+title_image: 'https://janlauge.github.io/images/profile.png'
+# for offline build baseurl: ''
+google_analytics: 'UA-104096144-1'
+disqus_shortname: 'janlauge.disqus.com'
+
+author:
+  name: 'Laurens Geffert'
+  email: laurensgeffert@gmail.com
+  github_username:  JanLauGe
+  twitter_username: JanLauGe
+  linkedin_username:  laurensgeffert
+  stackoverflow_username: janlauge
+  kaggle_username: janlauge
+  googlescholar_username: _aqDDYYAAAAJ
+
+defaults:
+  -
+    scope:
+      path: ''
+      type: 'posts'
+    values:
+        layout: 'post'
+
+# Build settings
+destination: _site
+paginate: 10
+permalink: /:year/:title/
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  # use Github Flavored Markdown
+  input: GFM
+  # do not replace newlines by <br>s
+  hard_wrap: false
+  math_engine: mathjax
+
+gems: ['jekyll-paginate']
+exclude: ['README.md', 'Gemfile', 'Gemfile.lock']
