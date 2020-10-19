@@ -1,22 +1,22 @@
 # Site settings
 title: 'Laurens Geffert'
 description: 'A collection of personal Data Science projects'
-url: 'https://janlauge.github.io'
-baseurl: 'https://janlauge.github.io/'
-title_image: 'https://janlauge.github.io/images/profile.png'
+url: 'https://aeonSolutions.github.io'
+baseurl: 'https://aeonSolutions.github.io/'
+title_image: 'https://aeonSolutions.github.io/images/profile.png'
 # for offline build baseurl: ''
 google_analytics: 'UA-104096144-1'
-disqus_shortname: 'janlauge.disqus.com'
+disqus_shortname: 'aeonSolutions.disqus.com'
 
 author:
-  name: 'Laurens Geffert'
-  email: laurensgeffert@gmail.com
-  github_username:  JanLauGe
-  twitter_username: JanLauGe
-  linkedin_username:  laurensgeffert
-  stackoverflow_username: janlauge
-  kaggle_username: janlauge
-  googlescholar_username: _aqDDYYAAAAJ
+  name: 'Miguel Tomás'
+  email: mtpsilva@gmail.com
+  github_username:  aeonSolutions
+  twitter_username: Aeonlabs.solutions
+  linkedin_username:  migueltomas
+  stackoverflow_username: 13794189
+  kaggle_username: aeonSolutions
+  googlescholar_username: IkngnVcAAAAJ
 
 defaults:
   -
