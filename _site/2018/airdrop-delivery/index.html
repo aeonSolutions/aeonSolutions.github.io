@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+
+  <title>Airdrop delivery with A* pathfinding</title>
+  <meta name="description" content="<strong>This post is an event report and a quick walk through to a submission that I
+developed with a group of participants at an Alibaba / Met Office UK hackathon.
+We are using the A* algorithm with a couple of tweaks to route cargo balloons
+from London to a number of cities in the UK.</strong>
+
+">
+  <meta name="author" content="Laurens Geffert">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Airdrop delivery with A* pathfinding">
+  <meta name="twitter:description" content="<strong>This post is an event report and a quick walk through to a submission that I
+developed with a group of participants at an Alibaba / Met Office UK hackathon.
+We are using the A* algorithm with a couple of tweaks to route cargo balloons
+from London to a number of cities in the UK.</strong>
+
+">
+  
+  <meta name="twitter:creator" content="JanLauGe">
+  
+  <meta name="twitter:image" content="/images/favicons/favicon-194x194.png" />
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Airdrop delivery with A* pathfinding">
+  <meta property="og:description" content="<strong>This post is an event report and a quick walk through to a submission that I
+developed with a group of participants at an Alibaba / Met Office UK hackathon.
+We are using the A* algorithm with a couple of tweaks to route cargo balloons
+from London to a number of cities in the UK.</strong>
+
+">
+  <meta property="og:image" content="/images/favicons/favicon-194x194.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/main.css?1539431935741611000">
+  <link rel="canonical" href="http://localhost:4000/2018/airdrop-delivery/">
+  <link rel="alternate" type="application/rss+xml" title="Laurens Geffert" href="feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="" title="link to home of Laurens Geffert">
+          <img src="images/profile.png" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Laurens Geffert</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Data Science Portfolio</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+
+      		  <!-- Blog Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/index" title="Blog posts" class="blog-button">Blog</a></li>
+      		  </ul>
+
+      		  <!-- About Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/about" title="About the author" class="blog-button">About</a></li>
+      		  </ul>
+
+      		  <!-- Blog Roll -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/links" title="Links to other sites" class="blog-button">Links</a></li>
+      		  </ul>
+
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              
+                <!-- GitHub -->
+                <li class="navigation__item">
+                  <a href="https://www.github.com/JanLauGe" title="JanLauGe on GitHub" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+              
+
+  			      
+                <!-- Twitter -->
+                <li class="navigation__item">
+                  <a href="http://twitter.com/JanLauGe" title="@JanLauGe on Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+              
+
+              
+                <!-- LinkedIn -->
+                <li class="navigation__item">
+                  <a href="https://www.linkedin.com/in/laurensgeffert" title="laurensgeffert on LinkedIn" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">LinkedIn</span>
+                  </a>
+                </li>
+              
+
+        			
+        			  <!-- Stackoverflow -->
+        			  <li class="navigation__item">
+        				  <a href="https://stackoverflow.com/users/5457259/janlauge" title="janlauge on StackOverflow" target="_blank">
+        				    <i class="icon icon-social-stack-overflow"></i>
+        				    <span class="label">Stackoverflow</span>
+        				  </a>
+        			  </li>
+              
+
+              
+        			  <!-- Kaggle -->
+        			  <li class="navigation__item">
+        				  <a href="https://www.kaggle.com/janlauge" title="janlauge on Kaggle" target="_blank">
+        				    <i class="icon icon-trophy"></i>
+        				    <span class="label">Kaggle</span>
+        				  </a>
+        			  </li>
+              
+
+        			
+        			  <!-- Googlescholar -->
+        			  <li class="navigation__item">
+                  <a href="https://scholar.google.co.uk/citations?user=_aqDDYYAAAAJ&hl=en" title="Laurens Geffert on Google Scholar" target="_blank">
+                    <i class="icon icon-social-google-plus"></i>
+                    <span class="label">Google Scholar</span>
+                  </a>
+                </li>
+              
+
+              
+
+              
+                <!-- Email -->
+                <li class="navigation__item">
+                  <a href="mailto:laurensgeffert@gmail.com" title="Email laurensgeffert@gmail.com" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+              
+
+              <!-- RSS -->
+              <li class="navigation__item">
+                <a href="feed.xml" title="Subscribe" target="_blank">
+                  <i class="icon icon-rss"></i>
+                  <span class="label">RSS</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="6 Apr 2018" class="post-meta__date date">6 Apr 2018</time>
+      
+      &#8226; <span class="post-meta__tags">on <a href="tags/#DataScience">DataScience</a> <a href="tags/#R">R</a> <a href="tags/#Visualisation">Visualisation</a> </span>
+      
+    </div>
+    <h1 class="post-title">Airdrop delivery with A* pathfinding</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>This post is an event report and a quick walk through to a submission that I
+developed with a group of participants at an Alibaba / Met Office UK hackathon.
+We are using the A* algorithm with a couple of tweaks to route cargo balloons
+from London to a number of cities in the UK.</strong>
+<!--more--></p>
+
+<blockquote>
+  <p>It’s the year 2050. The invention of anti-gravity engines has led to the
+creation of unmanned balloons that travel the UK, delivering goods. However,
+unpredictable weather conditions mean that these balloons are often delayed,
+damaged or even destroyed(!), so we need your help. We’re inviting you to join
+our contest AND our hackathon to create an algorithm which allows these balloons
+to get to their route safely and effectively.</p>
+</blockquote>
+
+<p>In January of this year, the <a href="https://www.metoffice.gov.uk/">Met Office</a> teamed
+up with <a href="https://www.alibabacloud.com/">Alibaba Cloud</a> in organising a hackathon
+at <a href="https://www.huckletree.com/locations/shoreditch">Huckletree Shoreditch</a>.
+Here is a short video that gives a good impression of the event</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/bhsNmmdkZ7A?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+
+<h3 id="the-problem">The Problem</h3>
+<p>The hackathon was organised as a “Future Challenge”, a fictitious scenario for
+the year 2050. Obviously, drone delivery would be considered so 2020 and
+completely outdated by then. Instead, people are relying on anti-gravity
+balloons to deliver goods to cities across the UK via air drop.
+These anti-gravity balloons are reliable and efficient, but have one major
+shortcoming: They crash when travelling in areas with high wind speeds.
+This is where the Met Office comes in. The task was to navigate balloons from
+origin to destination while avoiding storms by using the Met Office forecasts.</p>
+
+<p>I’ll spare you the full run through of rules, terms, and conditions. You can
+find them on the competition page. The main facts:</p>
+<ul>
+  <li>forecast data provides projected wind speed for fields of a grid</li>
+  <li>forecasts are for hourly intervals</li>
+  <li>balloons can move up, down, left, right, or stay in place</li>
+  <li>balloons move one field per 2 minutes</li>
+  <li>balloons crash when entering a field when the wind speed is ≥15</li>
+</ul>
+
+<p>So the big question is: How do we safely get the balloons from origin to
+destination while avoiding stormy areas? I teamed up with a nice bunch of
+people, mostly undergrad or master level university students. It was great to
+see their enthusiasm for working on this problem!</p>
+
+<h3 id="the-data">The Data</h3>
+<p>The data that was provided to us was:</p>
+<ol>
+  <li>the coordinates of cities (origin and destinations)</li>
+  <li>weather data, separated into:
+    * a training set with 7 days of weather forecasts from
+10 models plus observations of the actual conditions that manifested on these days
+    * a holdout set with 5 days of weather forecasts</li>
+</ol>
+
+<p>You should still be able to get the data <a href="https://tianchi.aliyun.com/competition/information.htm?spm=5176.100069.5678.2.7c1024fbV8ArTb&amp;raceId=231622">here</a>
+in case you’d like to have a go yourself. Note that the weather forecasts came
+in at a rather inconvenient file size of 2 x 800 MB, and download speeds were
+not that great either.</p>
+
+<p>See the map below for illustration purposes. The map shows gridded forecasts
+of wind speed for a one hour time slice, as well as city locations
+(origin in yellow, destinations in red).
+<a href="http://localhost:4000/assets/astar_weatherdata.png">Weather Forecast</a></p>
+
+<h3 id="weather-prediction">Weather Prediction</h3>
+<p>We started by looking at the weather predictions. Our initial plan was to use
+the first week, for which both forecasts and observations were available, to
+train a classifier that would identify the likelihood of high wind speeds in a
+given area at a particular time. This, however, turned out to be a bit of a red
+herring. The Met Office predictions were so good that averaging them and
+using a simple threshold of 15 resulted in close to zero false negatives when
+trying to detect cells with storms.</p>
+
+<p><em>Lesson learned:</em> Do your EDA properly to check which areas are worth
+investigating in detail and where you can use a simple ad-hoc solution.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+
+<span class="k">def</span> <span class="nf">convert_forecast</span><span class="p">(</span><span class="n">data_cube</span><span class="p">):</span>
+    <span class="c"># take mean of forecasts</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">min</span><span class="p">(</span><span class="n">data_cube</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="c"># binarize to storm (1) or safe (0)</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">arr_world</span> <span class="o">&gt;=</span> <span class="mi">15</span>
+    <span class="c"># from boolean to binary</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">arr_world</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c"># swap axes so x=0, y=1, z=2, day=3</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">arr_world</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">arr_world</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">arr_world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="n">arr_world</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">arr_world</span><span class="p">)</span>
+
+<span class="n">data_cube</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">'../data/5D_test.npy'</span><span class="p">)</span>
+<span class="c"># convert forecast to world array</span>
+<span class="n">forecast</span> <span class="o">=</span> <span class="n">convert_forecast</span><span class="p">(</span><span class="n">data_cube</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="balloon-navigation">Balloon Navigation</h3>
+<p>We wanted balloons to take the shortest path from origin to destination without
+passing into storms. That means storms can be viewed as obstacles in our path
+search problem, because we would never, ever, want to pass through them, even
+if that means a massive detour for the balloon. We therefore chose to use an
+A* path search algorithm. This algorithm finds the shortest path around
+obstacles in a reasonable amount of time and is quite straight forward to
+implement.</p>
+
+<p>The basic approach is to start from origin and generate a frontier possible next
+moves from a list of valid neighbouring fields. Fields with obstacles are
+excluded, as well as fields that have been visited before. For each field that
+is part of this frontier we log which field we came from and calculate a
+heuristic cost of our movement to far. As soon as the destination field becomes
+part of the frontier, we can recursively follow the trail laid out in our log,
+back to the origin, to find the shortest path.</p>
+
+<p>In case you would like more details or want to compare A* to other pathfinding
+algorithms, <a href="https://www.redblobgames.com/pathfinding/a-star/introduction.html">this page</a>
+has the best summary of pathfinding algorithms I have seen, including a great
+section on A* with interactive simulations.</p>
+
+<p>In our case, there is one additional complication: our search is two-dimensional
+(geographical space with latitude and longitude), but our “obstacles” change
+over time. My way around that was to make the search three-dimensional, with
+each movement time step (2 minutes) as a slice in the third dimension.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># repeat time slices x30</span>
+<span class="n">forecast_stack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">forecast</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>I then forced the search algorithm
+to always take a step forward in time by restricting the valid neighbours to
+<code class="highlighter-rouge">[..., ..., z+1]</code>. I tried to illustrate this schematically in the diagramm below:
+<img src="http://localhost:4000/assets/astar_3d_schematic.png" alt="3D A* schematic" /></p>
+
+<p>The code for my A* implementation in python using <code class="highlighter-rouge">heapq</code> can be found below.</p>
+
+<p>Note that I allow for neighbours that have the same x and y
+coordinates. This essentially allows balloons to “hover in place” to wait out
+unfavourable weather conditions in the area ahead, should that be the most
+promising course of action.</p>
+
+<p>Another thing to mention is that this approach massively inflates our frontier.
+Usually, an advantage of the A* algorithm is that fields that have been visited
+before do not need to be considered again. In my approach, field <code class="highlighter-rouge">[0,0,0]</code> is
+different from field <code class="highlighter-rouge">[0,0,1]</code> (the same latitude and longitude, but a different
+time step). As a result, computation becomes a lot more resource intense, but it
+is still feasible to run this on your local machine and in the fast-paced
+setting of a hackathon I think that prioritising developer time over computing
+time was the right call.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">heapq</span>
+
+<span class="k">def</span> <span class="nf">heuristic_function</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+<span class="k">def</span> <span class="nf">astar_3D</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">origin_xy</span><span class="p">,</span> <span class="n">destination_xy</span><span class="p">):</span>
+    <span class="c"># make origin 3D with timeslice 0</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">origin_xy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin_xy</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span>
+    <span class="c"># logs the path</span>
+    <span class="n">came_from</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="c"># holds the legal next moves in order of priority</span>
+    <span class="n">frontier</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c"># define legal moves:</span>
+    <span class="c"># up, down, left, right, stay in place.</span>
+    <span class="c"># no diagonals and always move forward one time step (z)</span>
+    <span class="n">neighbours</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
+
+    <span class="n">cost_so_far</span> <span class="o">=</span> <span class="p">{</span><span class="n">origin</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="p">{</span><span class="n">origin</span><span class="p">:</span> <span class="n">heuristic_function</span><span class="p">(</span><span class="n">origin_xy</span><span class="p">,</span> <span class="n">destination_xy</span><span class="p">)}</span>
+    <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">frontier</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">[</span><span class="n">origin</span><span class="p">],</span> <span class="n">origin</span><span class="p">))</span>
+
+    <span class="c"># While there is still options to explore</span>
+    <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
+
+        <span class="n">current</span> <span class="o">=</span> <span class="n">heapq</span><span class="o">.</span><span class="n">heappop</span><span class="p">(</span><span class="n">frontier</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c"># if current position is destination,</span>
+        <span class="c"># break the loop and find the path that lead here</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">current</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">destination_xy</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">while</span> <span class="n">current</span> <span class="ow">in</span> <span class="n">came_from</span><span class="p">:</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+                <span class="n">current</span> <span class="o">=</span> <span class="n">came_from</span><span class="p">[</span><span class="n">current</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">neighbours</span><span class="p">:</span>
+            <span class="n">move</span> <span class="o">=</span> <span class="n">current</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span> <span class="n">current</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">current</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">k</span>
+
+            <span class="c"># check that move is legal</span>
+            <span class="k">if</span> <span class="p">((</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">move</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">move</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&amp;</span>
+                <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">move</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])):</span>
+
+                <span class="k">if</span> <span class="n">space</span><span class="p">[</span><span class="n">move</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">move</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">move</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+
+                    <span class="n">new_cost</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">new_total</span> <span class="o">=</span> <span class="n">cost_so_far</span><span class="p">[</span><span class="n">current</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_cost</span>
+
+                    <span class="k">if</span> <span class="n">move</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cost_so_far</span><span class="p">:</span>
+                        <span class="n">cost_so_far</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_total</span>
+                        <span class="c"># calculate total cost</span>
+                        <span class="n">priority</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_total</span> <span class="o">+</span> <span class="n">heuristic_function</span><span class="p">(</span><span class="n">move</span><span class="p">,</span> <span class="n">destination_xy</span><span class="p">)</span>
+                        <span class="c"># update frontier</span>
+                        <span class="n">heapq</span><span class="o">.</span><span class="n">heappush</span><span class="p">(</span><span class="n">frontier</span><span class="p">,</span> <span class="p">(</span><span class="n">priority</span><span class="p">[</span><span class="n">move</span><span class="p">],</span> <span class="n">move</span><span class="p">))</span>
+                        <span class="c"># log this move</span>
+                        <span class="n">came_from</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">=</span> <span class="n">current</span>
+
+    <span class="k">return</span> <span class="s">'no solution found :('</span>
+
+<span class="c"># get city data</span>
+<span class="n">cities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'../data/CityData.csv'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c"># run algorithm</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">astar_3D</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="n">arr_world_big</span><span class="p">[:,:,:,</span><span class="mi">0</span><span class="p">],</span>
+             <span class="n">origin_xy</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
+             <span class="n">destination_xy</span><span class="o">=</span><span class="n">destination</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="visualising-the-results">Visualising the Results</h3>
+<p>We have a predicted optimal route now. That’s great, but it would be even
+better to visualise these results in a way that allows us to develop some
+intuition about how our solution is doing and where we could improve it further.
+I thought that an animation of the time slices with the paths generated would
+be ideal for this. So I used <code class="highlighter-rouge">matplotlib.pyplot</code> to create an image of each
+time slice and then combined them into an animated gif. Output and code below:</p>
+
+<p><img src="http://localhost:4000/assets/astar_animation_day11.gif" alt="Conditions and routes for day 11" /></p>
+
+<p>You can see that, for this day, the solution for most cities is relatively
+straight-forward because of low wind speeds in the majority of the area.
+However, the A* pathfinding algorithm can be seen nicely at work in the later
+timeslices and the centre-right of the map, where the purple balloon pauses
+for a timeslice to wait out unfavourable conditions ahead and then winds around
+patches of high wind speed towards its target.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">plot_solution</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">cities</span><span class="p">,</span> <span class="n">solution</span><span class="p">,</span> <span class="n">day</span><span class="p">):</span>
+    <span class="n">timesteps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">540</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">solution</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="n">day</span><span class="p">,:]</span>
+    <span class="c"># colour map for cities</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="c"># colour map for weather</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s">'grid'</span><span class="p">,</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)],</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timesteps</span><span class="p">:</span>
+        <span class="n">timeslice</span> <span class="o">=</span> <span class="n">world</span><span class="p">[:,:,</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">moves_sofar</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">solution</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="n">t</span><span class="p">,:]</span>
+        <span class="n">moves_new</span> <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="n">solution</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">30</span><span class="p">),:]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">solution_subset</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>    
+            <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">timeslice</span><span class="p">[:,:]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s">'equal'</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="p">)</span>
+
+            <span class="c"># plot old moves</span>
+            <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">moves_sofar</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="n">moves_sofar_city</span> <span class="o">=</span> <span class="n">moves_sofar</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">moves_sofar</span><span class="o">.</span><span class="n">city</span> <span class="o">==</span> <span class="n">city</span><span class="p">,:]</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">moves_sofar_city</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">moves_sofar_city</span><span class="o">.</span><span class="n">y</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">moves_sofar_city</span><span class="o">.</span><span class="n">z</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+
+            <span class="c"># plot new moves</span>
+            <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">moves_new</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                <span class="n">moves_new_city</span> <span class="o">=</span> <span class="n">moves_new</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">moves_new</span><span class="o">.</span><span class="n">city</span> <span class="o">==</span> <span class="n">city</span><span class="p">,:]</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">moves_new_city</span><span class="o">.</span><span class="n">x</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">moves_new_city</span><span class="o">.</span><span class="n">y</span>
+                <span class="n">z</span> <span class="o">=</span> <span class="n">moves_new_city</span><span class="o">.</span><span class="n">z</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">city</span><span class="p">)))</span>
+
+            <span class="c"># plot cities</span>
+            <span class="k">for</span> <span class="n">city</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cities</span><span class="o">.</span><span class="n">cid</span><span class="p">,</span> <span class="n">cities</span><span class="o">.</span><span class="n">xid</span><span class="p">,</span> <span class="n">cities</span><span class="o">.</span><span class="n">yid</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">city</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># balloon still en-route?</span>
+                    <span class="k">if</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">moves_new</span><span class="o">.</span><span class="n">city</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">city</span><span class="p">)))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+
+            <span class="c"># save and display</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s">'img_day'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">+</span> <span class="s">'_timestep_'</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="s">'.png'</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://janlauge.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2018 Laurens Geffert. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.js?1539431935741611000"></script>
+
+
+    </div>
+  </body>
+</html>

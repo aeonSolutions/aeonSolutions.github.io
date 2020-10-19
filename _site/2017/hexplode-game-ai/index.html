@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+
+  <title>Hexplode Game AI</title>
+  <meta name="description" content="<strong>The game hexplode lets two players fight one another using exploding stacks of
+their tokens as means to take over enemy tokens. Over time, chain reactions become
+more and more common and as a result the game becomes difficult to predict.
+Here, I implement a ‘minimax’ algorithm to create a (very basic) computer
+player for this game. You can test your skills against it <a href="http://janlauge.pythonanywhere.com/">here</a></strong>
+
+">
+  <meta name="author" content="Laurens Geffert">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Hexplode Game AI">
+  <meta name="twitter:description" content="<strong>The game hexplode lets two players fight one another using exploding stacks of
+their tokens as means to take over enemy tokens. Over time, chain reactions become
+more and more common and as a result the game becomes difficult to predict.
+Here, I implement a ‘minimax’ algorithm to create a (very basic) computer
+player for this game. You can test your skills against it <a href="http://janlauge.pythonanywhere.com/">here</a></strong>
+
+">
+  
+  <meta name="twitter:creator" content="JanLauGe">
+  
+  <meta name="twitter:image" content="/images/favicons/favicon-194x194.png" />
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Hexplode Game AI">
+  <meta property="og:description" content="<strong>The game hexplode lets two players fight one another using exploding stacks of
+their tokens as means to take over enemy tokens. Over time, chain reactions become
+more and more common and as a result the game becomes difficult to predict.
+Here, I implement a ‘minimax’ algorithm to create a (very basic) computer
+player for this game. You can test your skills against it <a href="http://janlauge.pythonanywhere.com/">here</a></strong>
+
+">
+  <meta property="og:image" content="/images/favicons/favicon-194x194.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/main.css?1539431935741611000">
+  <link rel="canonical" href="http://localhost:4000/2017/hexplode-game-ai/">
+  <link rel="alternate" type="application/rss+xml" title="Laurens Geffert" href="feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="" title="link to home of Laurens Geffert">
+          <img src="images/profile.png" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Laurens Geffert</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Data Science Portfolio</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+
+      		  <!-- Blog Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/index" title="Blog posts" class="blog-button">Blog</a></li>
+      		  </ul>
+
+      		  <!-- About Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/about" title="About the author" class="blog-button">About</a></li>
+      		  </ul>
+
+      		  <!-- Blog Roll -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/links" title="Links to other sites" class="blog-button">Links</a></li>
+      		  </ul>
+
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              
+                <!-- GitHub -->
+                <li class="navigation__item">
+                  <a href="https://www.github.com/JanLauGe" title="JanLauGe on GitHub" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+              
+
+  			      
+                <!-- Twitter -->
+                <li class="navigation__item">
+                  <a href="http://twitter.com/JanLauGe" title="@JanLauGe on Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+              
+
+              
+                <!-- LinkedIn -->
+                <li class="navigation__item">
+                  <a href="https://www.linkedin.com/in/laurensgeffert" title="laurensgeffert on LinkedIn" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">LinkedIn</span>
+                  </a>
+                </li>
+              
+
+        			
+        			  <!-- Stackoverflow -->
+        			  <li class="navigation__item">
+        				  <a href="https://stackoverflow.com/users/5457259/janlauge" title="janlauge on StackOverflow" target="_blank">
+        				    <i class="icon icon-social-stack-overflow"></i>
+        				    <span class="label">Stackoverflow</span>
+        				  </a>
+        			  </li>
+              
+
+              
+        			  <!-- Kaggle -->
+        			  <li class="navigation__item">
+        				  <a href="https://www.kaggle.com/janlauge" title="janlauge on Kaggle" target="_blank">
+        				    <i class="icon icon-trophy"></i>
+        				    <span class="label">Kaggle</span>
+        				  </a>
+        			  </li>
+              
+
+        			
+        			  <!-- Googlescholar -->
+        			  <li class="navigation__item">
+                  <a href="https://scholar.google.co.uk/citations?user=_aqDDYYAAAAJ&hl=en" title="Laurens Geffert on Google Scholar" target="_blank">
+                    <i class="icon icon-social-google-plus"></i>
+                    <span class="label">Google Scholar</span>
+                  </a>
+                </li>
+              
+
+              
+
+              
+                <!-- Email -->
+                <li class="navigation__item">
+                  <a href="mailto:laurensgeffert@gmail.com" title="Email laurensgeffert@gmail.com" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+              
+
+              <!-- RSS -->
+              <li class="navigation__item">
+                <a href="feed.xml" title="Subscribe" target="_blank">
+                  <i class="icon icon-rss"></i>
+                  <span class="label">RSS</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="19 Aug 2017" class="post-meta__date date">19 Aug 2017</time>
+      
+      &#8226; <span class="post-meta__tags">on <a href="tags/#Python">Python</a> <a href="tags/#Algorithms">Algorithms</a> <a href="tags/#Games">Games</a> </span>
+      
+    </div>
+    <h1 class="post-title">Hexplode Game AI</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>The game hexplode lets two players fight one another using exploding stacks of
+their tokens as means to take over enemy tokens. Over time, chain reactions become
+more and more common and as a result the game becomes difficult to predict.
+Here, I implement a ‘minimax’ algorithm to create a (very basic) computer
+player for this game. You can test your skills against it <a href="http://janlauge.pythonanywhere.com/">here</a></strong></p>
+
+<!--more-->
+
+<h2 id="the-game">The Game</h2>
+<p>Hexplode is almost as old as space invaders. The game of was first created as a
+BASIC program for the BBC Micro written by J. Ansell in 1982. I started working
+on this game as part of the 2016 Man AHL coder prize. I am using their implementation
+here, which is <a href="https://github.com/manahl/hexplode">openly available on GitHub</a>.
+Their summary of the game is this:</p>
+<blockquote>
+  <p>Hexplode is played by 2 players on a board of hexagonal tiles. The players take turns to place a counter on the board, they can only play a counter in an empty tile or a tile they already own. When the number of counters on a given tile equals the number of adjacent tiles the tile hexplodes and the contents of the tile are equally distributed to its neighbours changing the ownership of neighbouring counters over to the current player in the process. This process can often generate a chain reaction. The winner is the player that removes all of their opponents counters from the board.</p>
+</blockquote>
+
+<p>Man AHL ships their version with a flask app that allows us to run the game
+as a web server. This can be done either locally, or in the cloud. I have
+a version running on <a href="https://www.pythonanywhere.com/">PythonAnywhere</a>,
+which you can access at <a href="http://janlauge.pythonanywhere.com/">http://janlauge.pythonanywhere.com</a>.
+Here is an example of what it looks like:</p>
+
+<p><img src="http://localhost:4000/assets/hexplode_example.gif" alt="Game example" /></p>
+
+<p>On the algorithm backend, the game is represented by a simple board state in the form of a
+python dictionary. Each tile has a <code class="highlighter-rouge">tile_id</code>, a <code class="highlighter-rouge">score</code> (the number of counters on that tile),
+an <code class="highlighter-rouge">owner</code> (the ID of the player that owns the token on this tile),
+and a list of <code class="highlighter-rouge">neighbours</code> indicated by their respective <code class="highlighter-rouge">ID</code>s.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">board</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">&lt;</span><span class="n">tile</span> <span class="nb">id</span><span class="o">&gt;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">'counters'</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">number</span> <span class="n">of</span> <span class="n">counters</span> <span class="n">on</span> <span class="n">tile</span> <span class="ow">or</span> <span class="bp">None</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="s">'player'</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">player</span> <span class="nb">id</span> <span class="n">of</span> <span class="n">the</span> <span class="n">player</span> <span class="n">who</span> <span class="n">holds</span> <span class="n">the</span> <span class="n">tile</span> <span class="ow">or</span> <span class="bp">None</span><span class="o">&gt;</span><span class="p">,</span>
+        <span class="s">'neighbours'</span><span class="p">:</span> <span class="o">&lt;</span><span class="nb">list</span> <span class="n">of</span> <span class="n">ids</span> <span class="n">of</span> <span class="n">neighbouring</span> <span class="n">tile</span><span class="o">&gt;</span>
+    <span class="p">},</span>
+    <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="the-algorithm">The Algorithm</h2>
+<p>In a game-theoretical sense, hexplode is an adversarial, deterministic game with
+perfect information. This means that the players are pursuing opposing goals,
+that there is no element of chance or randomness, and that all information
+about the state of the game world is always available to all players.</p>
+
+<p>All three of these are attributes that hexplode shares with chess. I therefore decided
+to start my work on the competition with a ‘MiniMax’ implementation. This algorithm
+uses a tree approach. Each branch is a possible move, each leaf represents the
+resulting board state. Board states in terminal leaves are evaluated one by one,
+as “game over” for either player (+/- infinity), or, if that does not apply, using a heuristic
+value function (see diagram below).</p>
+
+<p><img src="http://localhost:4000/assets/hexplode_minimax.png" alt="MiniMax algorithm" />
+<em>source: <a href="https://commons.wikimedia.org/wiki/File:Minimax.svg">Wikimedia commons</a></em></p>
+
+<h3 id="board-state">Board State</h3>
+<p>Minimax is relatively straight-forward to implement. First, we need to be able to
+calculate future board states as a function of our moves. We create a function
+<code class="highlighter-rouge">AddCounter</code> for this, which uses a list of scores, the board shape, the id of the
+tile that the counter should be placed on, along with the player_id (the algorithm)
+and the current player (the one placing the counter, because we want to be able to
+simulate enemy moves as well). Note that this is a <strong>recursive</strong> function,
+because placing a marker on a tile can create an instable board state with
+as many counters on a tile as that tile has neighbours. In this case,
+the tile will “hexplode”, distributing its counters to the neighbouring tiles.
+This, in turn, could trigger subsequent hexplodes on those neighbouring tiles,
+which would be handled by the respective recursions triggered by the function.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">AddCounter</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">tile_id</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="n">player_current</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="bp">True</span> <span class="ow">in</span> <span class="p">[</span><span class="n">score</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">True</span> <span class="ow">in</span> <span class="p">[</span><span class="n">score</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+        <span class="c">#If player, counters are positive</span>
+        <span class="k">if</span> <span class="n">player_current</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span>
+        <span class="c">#If enemy, counters are negative</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">add</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="c">#If placing counter on own tile, increase counters</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">add</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">add</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">add</span>
+        <span class="c">#If placing counter on enemy tile, change and increase counters</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">add</span>
+        <span class="c">#If field full, hexplode (recursive)</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">board</span><span class="p">[</span><span class="n">tile_id</span><span class="p">][</span><span class="s">"neighbours"</span><span class="p">]):</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">neighbour</span> <span class="ow">in</span> <span class="n">board</span><span class="p">[</span><span class="n">tile_id</span><span class="p">][</span><span class="s">"neighbours"</span><span class="p">]:</span>
+                <span class="n">scores</span> <span class="o">=</span> <span class="n">AddCounter</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">neighbour</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="n">player_current</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">counter</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="growing-trees">Growing Trees</h3>
+<p>Now that we can calculate and evaluate potential future board states, we can use this to
+create a tree of move scenarios. A given board state allows for a number of moves
+(“place a marker on any tile that is not an enemy tile”). When it is our turn,
+we can make <code class="highlighter-rouge">n_1</code> valid moves resulting in <code class="highlighter-rouge">n_1</code> possible board states. Using
+another recursion call we can calculate <code class="highlighter-rouge">n_2</code> valid enemy moves with termination
+conditions for a maximum depth (<code class="highlighter-rouge">n_i</code>) and/or for a game-over situation
+(one player looses all counters).</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="n">player_current</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">depth</span><span class="p">,</span> <span class="n">move</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">player_current</span> <span class="o">=</span> <span class="n">player_current</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="n">move</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span>
+
+        <span class="c">#Check if game is over</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">True</span> <span class="ow">in</span> <span class="p">[</span><span class="n">score</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">True</span> <span class="ow">in</span> <span class="p">[</span><span class="n">score</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="n">depth</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c">#If this is not a terminal node, generate the children</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c">#Prefix for use with score</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_current</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">CreateChildren</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+        <span class="c">#If this is terminal node, calculate value</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c">#Get Value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">CalculateValue</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">player_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">CreateChildren</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> <span class="ow">or</span> <span class="p">((</span><span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)):</span>
+                <span class="n">future_scores</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+                <span class="n">future_scores</span> <span class="o">=</span> <span class="n">AddCounter</span><span class="p">(</span><span class="n">future_scores</span><span class="p">,</span> <span class="n">board</span><span class="p">,</span> <span class="n">tile_id</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_current</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Node</span><span class="p">(</span>
+                    <span class="n">board</span><span class="p">,</span>
+                    <span class="n">player_id</span><span class="p">,</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_current</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="n">future_scores</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">depth</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                    <span class="n">tile_id</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h3 id="adding-value">Adding Value</h3>
+<p>So we have our tree of all possible future board configurations now.
+However, how do we actually figure out which one is the most favourable or the
+most likely scenario? This is where the Minimax algorithm comes into play.
+Let’s assume for a second that we grew trees indefinitely, until each branch
+reaches a “game-over” state where all counters belong to one player.
+Furthermore, let’s say that we will assign a value to each of those terminal
+branches: <code class="highlighter-rouge">Inf</code> (positive infinity) for a branch in which we win, <code class="highlighter-rouge">-Inf</code>
+(negative infinity) for a branch in which we loose.</p>
+
+<p>In reality, however, we will not be able to calculate all terminal nodes.
+Consider this: A hexagonal board of side length 3 will have 19 tiles, equating
+to 19 possible moves in the first round. Each of these results in a board state
+with 18 possible moves for the enemy (361 board states in total), then 18 for us
+again (6517 board states in total), and so on and so forth. This quickly gets
+out of hand. We somehow need to keep the number of board states manageable.</p>
+
+<p>One way to achieve this is to limit the depth of our tree and evaluate the
+“favourability” of each terminal leaf using a heuristic value function.
+In this example, let’s go for something simple, such as the number of markers
+that we have on the board, minus the number of enemy markers. If for a given
+board state we’re in the lead, the number will be positive. If we’re behind,
+the number will be negative.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">CalculateScores</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">player_id</span><span class="p">):</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">tile_id</span><span class="p">,</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">board</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">tile</span><span class="p">[</span><span class="s">"player"</span><span class="p">]</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">tile</span><span class="p">[</span><span class="s">"player"</span><span class="p">]</span> <span class="o">==</span> <span class="n">player_id</span><span class="p">:</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="s">"counters"</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">tile</span><span class="p">[</span><span class="s">"player"</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">player_id</span><span class="p">:</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="s">"counters"</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">CalculateValue</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">player_id</span><span class="p">):</span>
+    <span class="s">"""Heuristic value function to estimate how favourable
+    the given board state is for the player"""</span>
+
+    <span class="c"># count counters</span>
+    <span class="n">OwnCounters</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">EnemyCounters</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">tile_id</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">OwnCounters</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">EnemyCounters</span> <span class="o">+=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">tile_id</span><span class="p">])</span>
+    <span class="c"># Check for game-over</span>
+    <span class="k">if</span> <span class="n">OwnCounters</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c">#Lost</span>
+        <span class="k">return</span><span class="p">(</span><span class="o">-</span><span class="n">maxsize</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">EnemyCounters</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c">#Won</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">maxsize</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">OwnCounters</span> <span class="o">-</span> <span class="n">EnemyCounters</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>We can “back-propagate” these outcomes up the tree and assume that each player will
+always pick the move that will bring them closer towards a winning branch rather
+than a loosing branch. In other words, we will try to <strong>maximise</strong> the value,
+our enemy will try to <strong>minimize</strong> it. Since we take turns at the moves, it
+becomes Max, Min, Max, Min, ergo MiniMax. This can be coded up with yet another
+recursive approach. This time we use two functions that call one-another, and
+take the node tree object we created as an input variable.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Maxvalue</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="s">"""Function to identify most advantageous player move"""</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">best_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">maxsize</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">best_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">best_value</span><span class="p">,</span> <span class="n">Minvalue</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">best_value</span>
+
+<span class="k">def</span> <span class="nf">Minvalue</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="s">"""Function to identify most likely enemy move"""</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">depth</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">best_value</span> <span class="o">=</span> <span class="n">maxsize</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">best_value</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">best_value</span><span class="p">,</span> <span class="n">Maxvalue</span><span class="p">(</span><span class="n">child</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">best_value</span>
+</code></pre></div></div>
+
+<h3 id="putting-it-all-together">Putting it all Together</h3>
+<p>Finally, we can join up all these individual parts and make them talk to the
+web app. The <code class="highlighter-rouge">Minimax</code> function below takes the inputs <code class="highlighter-rouge">board</code>, <code class="highlighter-rouge">game_id</code> and
+<code class="highlighter-rouge">player_id</code> from the flask app hosting the game, calculates the future
+possible board states by instanciating a <code class="highlighter-rouge">Node</code> object, and then picks
+the most favourable move from all moves currently possible by
+evaluating the future scenarios.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">Minimax</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">game_id</span><span class="p">,</span> <span class="n">player_id</span><span class="p">):</span>
+
+  <span class="c"># Run algorithm</span>
+  <span class="n">depth</span> <span class="o">=</span> <span class="mi">3</span>
+  <span class="n">scores</span> <span class="o">=</span> <span class="n">CalculateScores</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">player_id</span><span class="p">)</span>
+  <span class="n">moves</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">abs</span><span class="p">(</span><span class="n">score</span><span class="p">)</span> <span class="k">for</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">scores</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+  <span class="c"># If the game is only starting, pick first tile</span>
+  <span class="k">if</span> <span class="n">moves</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+      <span class="n">possible_moves</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="k">for</span> <span class="n">tile_id</span><span class="p">,</span> <span class="n">tile</span> <span class="ow">in</span> <span class="n">board</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+          <span class="k">if</span> <span class="n">tile</span><span class="p">[</span><span class="s">"player"</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+              <span class="n">possible_moves</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="s">"neighbours"</span><span class="p">]),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tile_id</span><span class="p">)</span>
+      <span class="c"># Pick the moves closest to an explosion</span>
+      <span class="n">best_move</span> <span class="o">=</span> <span class="n">possible_moves</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">possible_moves</span><span class="p">)][</span><span class="mi">2</span><span class="p">]</span>
+
+      <span class="k">return</span> <span class="n">best_move</span>
+
+  <span class="k">else</span><span class="p">:</span>
+      <span class="n">node_tree</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="n">board</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="n">player_id</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span>
+      <span class="n">candidate_moves</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">node_tree</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+          <span class="n">candidate_moves</span><span class="p">[</span><span class="n">child</span><span class="o">.</span><span class="n">move</span><span class="p">]</span> <span class="o">=</span> <span class="n">Minvalue</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+      <span class="n">best_move</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">candidate_moves</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">candidate_moves</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+
+      <span class="k">return</span> <span class="n">best_move</span>
+</code></pre></div></div>
+
+<p>I’ve included this function in my version of the web app running on pythonanywhere,
+so head over there and give it a go! <a href="http://janlauge.pythonanywhere.com/">http://janlauge.pythonanywhere.com</a></p>
+
+<p>I hope this is mildly interesting and/or useful. I’d be glad for any feedback
+on my approach, the code (this was one of my first projects in python), and
+this post in general. Thanks to Man AHL for hosting this interesting challenge!</p>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://janlauge.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2018 Laurens Geffert. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.js?1539431935741611000"></script>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<p><strong>If you have an android phone then google logs your location.
+Fortunately, it makes all of that data available to you via the “timeline” dashboard.
+Unfortunately, there is no easy way to get it off there and into an IDE.
+So we’ll have to do this the hard way!</strong>
+<!--more--></p>
+
+<h2 id="location-history">Location History</h2>
+<p>What did you do yesterday? Last week? Or on August the 17th at 15:00?
+The answer, at least to the last question, possibly used to be quite a stretch.
+But as many things, this has changed with the advent of our everyday companion,
+the smart phone.</p>
+
+<p>If you have a smart phone and you carry it around with you, your whereabouts are
+constantly logged and saved. For android phones with google maps, google infers
+your position based on a mix of GPS, cell phone towers, WiFi name lookup,
+and other factors, and saves it in a “location history”. This data is available
+to you via the (relatively new) “timeline” feature in google maps.</p>
+
+<p><img src="/assets/extract-location-history_timeline.png" alt="Game example" /></p>
+
+<h2 id="the-problem">The Problem</h2>
+<p>As always, Google’s dashboard is very intuitive to navigate and offers great
+functionality. There is just one problem: I cannot summarise, report on, or
+programmatically analyse my data. It’s locked into google’s systems.</p>
+
+<p>Because our location data is undoubtedly our personal property, google offers
+us the option to download it in <code class="highlighter-rouge">.kml</code> format. However, this is only available
+via the web interface. If I wanted to build personalised reports on top of the
+data, I would need programmatic access via an API that I can pass parameters
+such as date and time to retrieve data dynamically. That is currently not
+supported by google. But with a little bit of manual work, we will get there
+nonetheless!</p>
+
+<h2 id="the-solution">The Solution</h2>
+<p>After a little bit of digging around I found <a href="https://medium.com/alex-attia-blog/how-to-take-back-control-and-use-your-google-maps-data-683fb5d4043e">this Medium post</a>
+and <a href="https://github.com/alexattia/Maps-Location-History">this associated GitHub repository</a>
+that got me 90% of the way very quickly. Alex, if you’re reading this, thanks
+a ton for putting all of that together! The code on GitHub was still missing
+yearly and daily sub-setting functionality, so I added that in
+<a href="https://github.com/JanLauGe/c_google_timeline">my repository</a>
+(pull request submitted!).</p>
+
+<p>So how to use this? Here are the step-by-step instructions.</p>
+
+<p>In bash:</p>
+
+<p><code class="highlighter-rouge">bash
+# Clone the code repository
+git clone https://github.com/JanLauGe/c_google_timeline
+</code></p>
+
+<p>Next, we’ll have to do some manual work. This is because we will need information
+from our google account sign in, saved in our cookies, in order to authenticate
+our <code class="highlighter-rouge">GET</code> requests for <code class="highlighter-rouge">KML</code> file downloads.
+1. Open https://www.google.com/maps/timeline in Mozilla Firefox (I tried Chrome first, it did not work for me)
+2. Inspect the page (<code class="highlighter-rouge">Ctrl + Shift + I</code>) and go to the Network tab
+3. Enter the link below in the address line of your browser: https://www.google.com/maps/timeline/kml
+4. A new event will appear in the inspect-network tab as a result of the request. Copy its content as a cURL
+5. Paste the cURL string to a text editor and save it as a key file (I used ‘~/.env/.google_maps_cookie’)</p>
+
+<p>Now that we have the cookie information, we can go back to the fun part in Python:</p>
+
+<p>```python
+import datetime as DT
+import process_location</p>
+
+<h1 id="get-inputs---------------------------">Get inputs ————————–</h1>
+<p># Date info
+today = DT.date.today()
+end_day = today.day
+end_month = today.month
+end_year = today.year</p>
+
+<p>lastweek = today - DT.timedelta(days=7)
+begin_day = lastweek.day
+begin_month = lastweek.month
+begin_year = lastweek.year</p>
+
+<h1 id="cookie-info">Cookie info</h1>
+<p>cookie_content = open(‘~/.env/.google_maps_cookie’, ‘r’).read()
+# Remove line break at end of string
+cookie_content = cookie_content[:-1]</p>
+
+<h1 id="where-to-save-the-files">Where to save the files</h1>
+<p>folder = ‘~/google_timeline/data/’</p>
+
+<h1 id="get-files---------------------------">Get files ————————–</h1>
+<p>process_location.create_kml_files(
+    begin_year=begin_year,
+    begin_month=begin_month,
+    begin_day=begin_day,
+    end_year=end_year,
+    end_month=end_month,
+    end_day=end_day,
+    cookie_content=cookie_content,
+    folder=folder)
+```</p>
+
+<p>This will download the <code class="highlighter-rouge">KML</code> files (one per day) for the last week.
+I’ll leave it at that for now. If you would like to know how to read the files
+into a pandas data frame, check out <a href="https://github.com/alexattia/Maps-Location-History">Alexandre Attia’s repo</a>,
+or come back here later. I already have a specific application in mind for this,
+but that is a story for another post.</p>
+
+<p>As always, hope this is useful for you. Please leave a comment below.
+I have enabled anonymous commenting to remove the entry hurdle of signing up to Disqus.</p>

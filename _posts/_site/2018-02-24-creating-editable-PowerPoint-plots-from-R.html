@@ -1,0 +1,76 @@
+<p><strong>In this post I am giving a quick overview of how to create editable plots
+in PowerPoint from R. These plots are comprised of simple vector-based shapes
+and thus allow you to change labels, colours, or text position in seconds.
+ Your project managers will love it!</strong>
+<!--more--></p>
+
+<h2 id="motivation">Motivation</h2>
+<p>R allows us to create great visualisations, but in most data science settings
+these need to be presented to key stakeholders and decision makers in
+presentations or “slideuments”. Having to make small changes to previously
+compiled slots can be time consuming and frustrating. A solution to this common
+problem is to keep your plots and graphs editable as a group of vector shapes
+in PowerPoint. This way project managers or data scientists themselves can make
+small changes without having to re-execute a single line of code.</p>
+
+<h2 id="solution">Solution</h2>
+<p>We will use a tidyverse approach for creating the plot. Furthermore, the
+<code class="highlighter-rouge">officer</code> package enables us to smoothly interact with PowerPoint, and the <code class="highlighter-rouge">rvg</code>
+package is required to save our plots as editable vector graphs.</p>
+
+<p><code class="highlighter-rouge">R
+library(tidyverse)
+library(officer)
+library(rvg)
+</code></p>
+
+<p>For demonstration purposes, let’s create a plot using the diamonds dataset.
+NB: I am saving the ggplot object to a variable name, but also displaying the
+plot when executing the lines by appending the <code class="highlighter-rouge">; ggp</code> at the end.</p>
+
+<p><code class="highlighter-rouge">R
+# Using diamonds dataset which is shipped with R
+ggp &lt;- diamonds %&gt;%
+  # Let's simplify things by only considering natural number carats
+  mutate(carat = floor(carat)) %&gt;%
+  group_by(carat, cut, clarity, color) %&gt;%
+  summarise(price = mean(price)) %&gt;%
+  # Create a plot of price by carat, colour, cut, and clarity
+  ggplot(aes(x = carat, y = price, fill = color)) +
+  geom_bar(stat = 'identity') +
+  facet_grid(cut ~ clarity) +
+  # Simplify the plot layout a little
+  theme_bw() +
+  guides(fill = FALSE) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()); ggp
+</code></p>
+
+<p><img src="/assets/ppplots_example.png" alt="Plot example" /></p>
+
+<p>Now we can use <code class="highlighter-rouge">officer</code> to create a new PowerPoint document and
+<code class="highlighter-rouge">rvg::ph_with_vg</code> to drop our ggplot object in there.</p>
+
+<p>```R
+# Create a new powerpoint document
+doc &lt;- read_pptx()
+doc &lt;- add_slide(doc, ‘Title and Content’, ‘Office Theme’)</p>
+
+<h1 id="add-the-plot">Add the plot</h1>
+<p>doc &lt;- ph_with_vg(doc, ggobj = ggp, type = ‘body’)</p>
+
+<h1 id="write-the-document-to-a-file">Write the document to a file</h1>
+<p>print(doc, target = ‘plot.pptx’)
+```</p>
+
+<p>Now open the document in PowerPoint. Right-click and ungroup the plot. Voila!
+You should be able to select individual elements, for example the data bars in
+the plot, change their colour, move them around, change the text in labels,
+and much more. Have a look at the plot below. A cookie for you if you can
+find all ten edits that I made in the example.</p>
+
+<p><img src="/assets/ppplots_example_edited.png" alt="Plot example" /></p>
+
+<p>As always, hope this is helpful. And FYI, I am still looking for a way to
+achieve the same result using <code class="highlighter-rouge">Python</code>. If you know one, collect some bounty
+<a href="https://stackoverflow.com/questions/48944296/editable-plots-in-powerpoint-from-python-equivalent-of-officer-and-rvg">here</a></p>

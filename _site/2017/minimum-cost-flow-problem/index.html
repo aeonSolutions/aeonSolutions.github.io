@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+
+  <title>Minimum Cost Flow</title>
+  <meta name="description" content="<strong>Or how to get all your X from A to B for very little C. In this post I create an R implementation of optimizing a “minimum cost flow problem” in R using graph theory and the lpSolve package. This can be useful for transportation and allocation applications in supply chain, logistics, and planning.</strong>
+
+">
+  <meta name="author" content="Laurens Geffert">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Minimum Cost Flow">
+  <meta name="twitter:description" content="<strong>Or how to get all your X from A to B for very little C. In this post I create an R implementation of optimizing a “minimum cost flow problem” in R using graph theory and the lpSolve package. This can be useful for transportation and allocation applications in supply chain, logistics, and planning.</strong>
+
+">
+  
+  <meta name="twitter:creator" content="JanLauGe">
+  
+  <meta name="twitter:image" content="/images/favicons/favicon-194x194.png" />
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Minimum Cost Flow">
+  <meta property="og:description" content="<strong>Or how to get all your X from A to B for very little C. In this post I create an R implementation of optimizing a “minimum cost flow problem” in R using graph theory and the lpSolve package. This can be useful for transportation and allocation applications in supply chain, logistics, and planning.</strong>
+
+">
+  <meta property="og:image" content="/images/favicons/favicon-194x194.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/main.css?1539431935741611000">
+  <link rel="canonical" href="http://localhost:4000/2017/minimum-cost-flow-problem/">
+  <link rel="alternate" type="application/rss+xml" title="Laurens Geffert" href="feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="" title="link to home of Laurens Geffert">
+          <img src="images/profile.png" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Laurens Geffert</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Data Science Portfolio</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+
+      		  <!-- Blog Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/index" title="Blog posts" class="blog-button">Blog</a></li>
+      		  </ul>
+
+      		  <!-- About Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/about" title="About the author" class="blog-button">About</a></li>
+      		  </ul>
+
+      		  <!-- Blog Roll -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/links" title="Links to other sites" class="blog-button">Links</a></li>
+      		  </ul>
+
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              
+                <!-- GitHub -->
+                <li class="navigation__item">
+                  <a href="https://www.github.com/JanLauGe" title="JanLauGe on GitHub" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+              
+
+  			      
+                <!-- Twitter -->
+                <li class="navigation__item">
+                  <a href="http://twitter.com/JanLauGe" title="@JanLauGe on Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+              
+
+              
+                <!-- LinkedIn -->
+                <li class="navigation__item">
+                  <a href="https://www.linkedin.com/in/laurensgeffert" title="laurensgeffert on LinkedIn" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">LinkedIn</span>
+                  </a>
+                </li>
+              
+
+        			
+        			  <!-- Stackoverflow -->
+        			  <li class="navigation__item">
+        				  <a href="https://stackoverflow.com/users/5457259/janlauge" title="janlauge on StackOverflow" target="_blank">
+        				    <i class="icon icon-social-stack-overflow"></i>
+        				    <span class="label">Stackoverflow</span>
+        				  </a>
+        			  </li>
+              
+
+              
+        			  <!-- Kaggle -->
+        			  <li class="navigation__item">
+        				  <a href="https://www.kaggle.com/janlauge" title="janlauge on Kaggle" target="_blank">
+        				    <i class="icon icon-trophy"></i>
+        				    <span class="label">Kaggle</span>
+        				  </a>
+        			  </li>
+              
+
+        			
+        			  <!-- Googlescholar -->
+        			  <li class="navigation__item">
+                  <a href="https://scholar.google.co.uk/citations?user=_aqDDYYAAAAJ&hl=en" title="Laurens Geffert on Google Scholar" target="_blank">
+                    <i class="icon icon-social-google-plus"></i>
+                    <span class="label">Google Scholar</span>
+                  </a>
+                </li>
+              
+
+              
+
+              
+                <!-- Email -->
+                <li class="navigation__item">
+                  <a href="mailto:laurensgeffert@gmail.com" title="Email laurensgeffert@gmail.com" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+              
+
+              <!-- RSS -->
+              <li class="navigation__item">
+                <a href="feed.xml" title="Subscribe" target="_blank">
+                  <i class="icon icon-rss"></i>
+                  <span class="label">RSS</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="6 Aug 2017" class="post-meta__date date">6 Aug 2017</time>
+      
+      &#8226; <span class="post-meta__tags">on <a href="tags/#DataSience">DataSience</a> <a href="tags/#Optimization">Optimization</a> <a href="tags/#GraphTheory">GraphTheory</a> <a href="tags/#Algorithms">Algorithms</a> <a href="tags/#R">R</a> </span>
+      
+    </div>
+    <h1 class="post-title">Minimum Cost Flow</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>Or how to get all your X from A to B for very little C. In this post I create an R implementation of optimizing a “minimum cost flow problem” in R using graph theory and the lpSolve package. This can be useful for transportation and allocation applications in supply chain, logistics, and planning.</strong></p>
+
+<!--more-->
+
+<h3 id="the-problem">The Problem</h3>
+<p>Recently I came across a business problem that I interpreted as a “minimum cost flow problem”. According to Wikipedia it is an optimization and decision problem to find the cheapest possible way of sending a certain amount of flow through a flow network. A typical application of this problem involves finding the best delivery route from a factory to a warehouse where the road network has some capacity and cost associated.</p>
+
+<p>I was hoping for a readily available implementation of an algorithm for this problem via an R-package, but my search on CRAN did not yield any results. So I turned to StackOverflow. You can find my <a href="https://stackoverflow.com/questions/43616480/minimum-cost-flow-network-optimization-in-r/">question here</a>. Ultimately, I ended up answering it myself. If this is useful to you, I’d appreciate your upvote :)</p>
+
+<h3 id="example">Example</h3>
+<p>Let’s start off by building an example graph for illustrating the problem. I used a manually created <code class="highlighter-rouge">edgelist</code>, defining a directional graph. Each edge has a <code class="highlighter-rouge">from</code> node and a <code class="highlighter-rouge">to</code> node, given as numeric ID, as well as a capacity <em>c</em> (the maximum number of units that can pass through this connection), and a cost <em>a</em> (the cost of passing a single unit through this connection). The edgelist data frame can be turned into a graph object using the <code class="highlighter-rouge">igraph</code> package and its <code class="highlighter-rouge">graph_from_edgelist</code> function.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">igraph</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">magrittr</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># create edgelist</span><span class="w">
+</span><span class="n">edgelist</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">data.frame</span><span class="p">(</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">),</span><span class="w">
+  </span><span class="n">to</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="m">7</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="m">9</span><span class="p">,</span><span class="w"> </span><span class="m">9</span><span class="p">),</span><span class="w">
+  </span><span class="n">ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">16</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w">
+  </span><span class="n">capacity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">,</span><span class="w"> </span><span class="m">99</span><span class="p">),</span><span class="w">
+  </span><span class="n">cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">))</span><span class="w">
+
+</span><span class="c1"># make edgelist into graph object</span><span class="w">
+</span><span class="n">g</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">graph_from_edgelist</span><span class="p">(</span><span class="n">as.matrix</span><span class="p">(</span><span class="n">edgelist</span><span class="p">[,</span><span class="nf">c</span><span class="p">(</span><span class="s1">'from'</span><span class="p">,</span><span class="s1">'to'</span><span class="p">)]))</span><span class="w">
+
+</span><span class="c1"># add properties</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">capacity</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edgelist</span><span class="o">$</span><span class="n">capacity</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edgelist</span><span class="o">$</span><span class="n">cost</span><span class="w">
+
+</span><span class="n">plot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">edge.label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">capacity</span><span class="p">)</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">edge.label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The result looks like this:</p>
+
+<p><img src="http://localhost:4000/assets/mincostflow_capacity.jpeg" alt="network capacity" /></p>
+
+<p><img src="http://localhost:4000/assets/mincostflow_cost.jpeg" alt="network cost" /></p>
+
+<p>Note that the example I chose only uses non-standard capacities in the edges coming out of node 1, and only uses non-zero cost values in the edges of the middle layer. I separated cost and capacity out like that to keep it simple for this example. In a real world application the values are likely more mixed, and there would probably be a lot more edges.</p>
+
+<hr />
+
+<p>With our example graph we are now ready to formulate the objective function and the constraints of our optimization. I use the function below to generate the inputs for our solver. They consist of a left-hand side <code class="highlighter-rouge">lhs</code> (a vector of integers representing coefficients of the flow through each edge), a direction <code class="highlighter-rouge">dir</code> (&lt;, ==, &gt;), and a right-hand side <code class="highlighter-rouge">rhs</code> giving the numeric value that will need to be met by each constraint.</p>
+
+<h3 id="the-solution">The Solution</h3>
+<p>Our objective is to minimize the total cost incurred, subject to the relevant constraints</p>
+
+<script type="math/tex; mode=display">minimize(\sum_{i = 1}^{E} f(x_i) * c)</script>
+
+<p>Constraints are grouped into three major categories:</p>
+<ol>
+  <li><strong>capacity constraints:</strong> Flow <em>f</em> through any given edge <em>x</em> can’t be higher than the edge’s capacity <em>c</em>.</li>
+</ol>
+
+<script type="math/tex; mode=display">% <![CDATA[
+f(x)<=c %]]></script>
+
+<ol>
+  <li><strong>node flow constraints:</strong> All units in our problem should pass the network. We cannot retain any units in the network, and we cannot have flow out of a node without the equivalent flowing in to that node as well. Therefore, the sum of units flowing through incoming nodes <em>E(n)</em> into a node needs to be exactly equal to the sum of units flowing through outgoing nodes <em>E(o)</em> out of that node.</li>
+</ol>
+
+<script type="math/tex; mode=display">\sum_{i\in E(n))}f(x_i)=\sum_{i\in E(o))}f(x_i)*-1=0</script>
+
+<ol>
+  <li><strong>initialisation constraints:</strong> The node flow constraint is true for all except the source node <em>s</em> and the target node <em>t</em>. We are looking for a solution that pushes a fixed number of units from <em>s</em> through the network into <em>t</em>. Therefore, the sum of units flowing through the outgoing nodes <em>E(s)</em> out of <em>s</em> and the sum of units flowing through the incoming nodes <em>E(t)</em> into <em>t</em> needs to be exactly equal to that fixed number of units.</li>
+</ol>
+
+<script type="math/tex; mode=display">\sum_{i\in E(s))}f(x_i)=\sum_{i\in E(t))}f(x_i)*-1=total flow</script>
+
+<p>I have implemented all of that in the function below:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">createConstraintsMatrix</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span><span class="w"> </span><span class="n">total_flow</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+  </span><span class="c1"># Edge IDs to be used as names</span><span class="w">
+  </span><span class="n">names_edges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edges</span><span class="o">$</span><span class="n">ID</span><span class="w">
+  </span><span class="c1"># Number of edges</span><span class="w">
+  </span><span class="n">numberof_edges</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">names_edges</span><span class="p">)</span><span class="w">
+
+  </span><span class="c1"># Node IDs to be used as names</span><span class="w">
+  </span><span class="n">names_nodes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">edges</span><span class="o">$</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="n">edges</span><span class="o">$</span><span class="n">to</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">unique</span><span class="w">
+  </span><span class="c1"># Number of nodes</span><span class="w">
+  </span><span class="n">numberof_nodes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">names_nodes</span><span class="p">)</span><span class="w">
+
+  </span><span class="c1"># Build constraints matrix</span><span class="w">
+  </span><span class="n">constraints</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="w">
+    </span><span class="n">lhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w">
+    </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w">
+    </span><span class="n">rhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">)</span><span class="w">
+
+  </span><span class="cd">#' Build capacity constraints ------------------------------------------------</span><span class="w">
+  </span><span class="cd">#' Flow through each edge should not be larger than capacity.</span><span class="w">
+  </span><span class="cd">#' We create one constraint for each edge. All coefficients zero</span><span class="w">
+  </span><span class="cd">#' except the ones of the edge in question as one, with a constraint</span><span class="w">
+  </span><span class="cd">#' that the result is smaller than or equal to capacity of that edge.</span><span class="w">
+
+  </span><span class="c1"># Flow through individual edges</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">lhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edges</span><span class="o">$</span><span class="n">ID</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">length</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">diag</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">set_colnames</span><span class="p">(</span><span class="n">edges</span><span class="o">$</span><span class="n">ID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+    </span><span class="n">set_rownames</span><span class="p">(</span><span class="n">edges</span><span class="o">$</span><span class="n">ID</span><span class="p">)</span><span class="w">
+  </span><span class="c1"># should be smaller than or equal to</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">dir</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="s1">'&lt;='</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">edges</span><span class="p">))</span><span class="w">
+  </span><span class="c1"># than capacity</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">rhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edges</span><span class="o">$</span><span class="n">capacity</span><span class="w">
+
+
+  </span><span class="cd">#' Build node flow constraints -----------------------------------------------</span><span class="w">
+  </span><span class="cd">#' For each node, find all edges that go to that node</span><span class="w">
+  </span><span class="cd">#' and all edges that go from that node. The sum of all inputs</span><span class="w">
+  </span><span class="cd">#' and all outputs should be zero. So we set inbound edge coefficients as 1</span><span class="w">
+  </span><span class="cd">#' and outbound coefficients as -1. In any viable solution the result should</span><span class="w">
+  </span><span class="cd">#' be equal to zero.</span><span class="w">
+
+  </span><span class="n">nodeflow</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w">
+                     </span><span class="n">nrow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numberof_nodes</span><span class="p">,</span><span class="w">
+                     </span><span class="n">ncol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numberof_edges</span><span class="p">,</span><span class="w">
+                     </span><span class="n">dimnames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">names_nodes</span><span class="p">,</span><span class="w"> </span><span class="n">names_edges</span><span class="p">))</span><span class="w">
+
+  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">names_nodes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+
+    </span><span class="c1"># input arcs</span><span class="w">
+    </span><span class="n">edges_in</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edges</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">filter</span><span class="p">(</span><span class="n">to</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">select</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">unlist</span><span class="w">
+    </span><span class="c1"># output arcs</span><span class="w">
+    </span><span class="n">edges_out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">edges</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">filter</span><span class="p">(</span><span class="n">from</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">select</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+      </span><span class="n">unlist</span><span class="w">
+
+    </span><span class="c1"># set input coefficients to 1</span><span class="w">
+    </span><span class="n">nodeflow</span><span class="p">[</span><span class="w">
+      </span><span class="n">rownames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w">
+      </span><span class="n">colnames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="n">edges_in</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="w">
+
+    </span><span class="c1"># set output coefficients to -1</span><span class="w">
+    </span><span class="n">nodeflow</span><span class="p">[</span><span class="w">
+      </span><span class="n">rownames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w">
+      </span><span class="n">colnames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="n">edges_out</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">-1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+
+  </span><span class="c1"># But exclude source and target edges</span><span class="w">
+  </span><span class="c1"># as the zero-sum flow constraint does not apply to these!</span><span class="w">
+  </span><span class="c1"># Source node is assumed to be the one with the minimum ID number</span><span class="w">
+  </span><span class="c1"># Sink node is assumed to be the one with the maximum ID number</span><span class="w">
+  </span><span class="n">sourcenode_id</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">min</span><span class="p">(</span><span class="n">edges</span><span class="o">$</span><span class="n">from</span><span class="p">)</span><span class="w">
+  </span><span class="n">targetnode_id</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">edges</span><span class="o">$</span><span class="n">to</span><span class="p">)</span><span class="w">
+  </span><span class="c1"># Keep node flow values for separate step below</span><span class="w">
+  </span><span class="n">nodeflow_source</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nodeflow</span><span class="p">[</span><span class="n">rownames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">sourcenode_id</span><span class="p">,]</span><span class="w">
+  </span><span class="n">nodeflow_target</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nodeflow</span><span class="p">[</span><span class="n">rownames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">targetnode_id</span><span class="p">,]</span><span class="w">
+  </span><span class="c1"># Exclude them from node flow here</span><span class="w">
+  </span><span class="n">nodeflow</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">nodeflow</span><span class="p">[</span><span class="o">!</span><span class="n">rownames</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)</span><span class="w"> </span><span class="o">%in%</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">sourcenode_id</span><span class="p">,</span><span class="w"> </span><span class="n">targetnode_id</span><span class="p">),]</span><span class="w">
+
+  </span><span class="c1"># Add nodeflow to the constraints list</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">lhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rbind</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="n">nodeflow</span><span class="p">)</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">dir</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">dir</span><span class="p">,</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="s1">'=='</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)))</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">rhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">rhs</span><span class="p">,</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">nodeflow</span><span class="p">)))</span><span class="w">
+
+
+  </span><span class="cd">#' Build initialisation constraints ------------------------------------------</span><span class="w">
+  </span><span class="cd">#' For the source and the target node, we want all outbound nodes and</span><span class="w">
+  </span><span class="cd">#' all inbound nodes to be equal to the sum of flow through the network</span><span class="w">
+  </span><span class="cd">#' respectively</span><span class="w">
+
+  </span><span class="c1"># Add initialisation to the constraints list</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">lhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rbind</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">lhs</span><span class="p">,</span><span class="w">
+                           </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nodeflow_source</span><span class="p">,</span><span class="w">
+                           </span><span class="n">target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nodeflow_target</span><span class="p">)</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">dir</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">dir</span><span class="p">,</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="s1">'=='</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="p">))</span><span class="w">
+  </span><span class="c1"># Flow should be negative for source, and positive for target</span><span class="w">
+  </span><span class="n">constraints</span><span class="o">$</span><span class="n">rhs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">constraints</span><span class="o">$</span><span class="n">rhs</span><span class="p">,</span><span class="w"> </span><span class="n">total_flow</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="n">total_flow</span><span class="p">)</span><span class="w">
+
+  </span><span class="nf">return</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="n">constraintsMatrix</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">createConstraintsMatrix</span><span class="p">(</span><span class="n">edgelist</span><span class="p">,</span><span class="w"> </span><span class="m">30</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This should return something like this. We can see the rows corresponding to capacity constraints as lines with just a single 1 value in <code class="highlighter-rouge">lhs</code>, a <code class="highlighter-rouge">&lt;=</code> in <code class="highlighter-rouge">dir</code>, and the capacity of the corresponding edge in the <code class="highlighter-rouge">rhs</code>. Node flow constraints show as one row per node, 1 for incoming nodes and -1 for outgoing nodes, <code class="highlighter-rouge">==</code> in <code class="highlighter-rouge">dir</code>, and zero in <code class="highlighter-rouge">rhs</code>. Finally, the initialisation constraints are implemented with negative coefficients for all edges leaving the source node and positive coefficients for all edges reaching the target node.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">$</span><span class="n">lhs</span><span class="w">
+</span><span class="m">1</span><span class="w">  </span><span class="m">2</span><span class="w">  </span><span class="m">3</span><span class="w">  </span><span class="m">4</span><span class="w">  </span><span class="m">5</span><span class="w">  </span><span class="m">6</span><span class="w">  </span><span class="m">7</span><span class="w">  </span><span class="m">8</span><span class="w">  </span><span class="m">9</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">11</span><span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="m">13</span><span class="w"> </span><span class="m">14</span><span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="m">16</span><span class="w">
+</span><span class="m">1</span><span class="w">       </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">2</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">3</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">4</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">5</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">6</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">7</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">8</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">9</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">10</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">11</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">12</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">13</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">14</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">15</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">16</span><span class="w">      </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">
+</span><span class="m">2</span><span class="w">       </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">3</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">4</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">5</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">6</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">7</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="m">8</span><span class="w">       </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">-1</span><span class="w">
+</span><span class="n">source</span><span class="w"> </span><span class="m">-1</span><span class="w"> </span><span class="m">-1</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">
+</span><span class="n">target</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">  </span><span class="m">1</span><span class="w">
+
+</span><span class="o">$</span><span class="n">dir</span><span class="w">
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w">
+</span><span class="p">[</span><span class="m">15</span><span class="p">]</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"&lt;="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w"> </span><span class="s2">"=="</span><span class="w">
+
+</span><span class="o">$</span><span class="n">rhs</span><span class="w">
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w">  </span><span class="m">20</span><span class="w">  </span><span class="m">30</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">  </span><span class="m">99</span><span class="w">   </span><span class="m">0</span><span class="w">
+</span><span class="p">[</span><span class="m">18</span><span class="p">]</span><span class="w">   </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w">   </span><span class="m">0</span><span class="w"> </span><span class="m">-30</span><span class="w">  </span><span class="m">30</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We can now feed all of this information to <code class="highlighter-rouge">lpSolve</code> to calculate the optimal flow values of each edge. Our example is relatively small, but because all values are integers it will compile relatively fast, even for much larger number of edges. I have successfully run a similar version of this code for a network with several thousands of edges in less than a minute on my laptop.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">lpSolve</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># Run lpSolve to find best solution</span><span class="w">
+</span><span class="n">solution</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lp</span><span class="p">(</span><span class="w">
+  </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'min'</span><span class="p">,</span><span class="w">
+  </span><span class="n">objective.in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">edgelist</span><span class="o">$</span><span class="n">cost</span><span class="p">,</span><span class="w">
+  </span><span class="n">const.mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constraintsMatrix</span><span class="o">$</span><span class="n">lhs</span><span class="p">,</span><span class="w">
+  </span><span class="n">const.dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constraintsMatrix</span><span class="o">$</span><span class="n">dir</span><span class="p">,</span><span class="w">
+  </span><span class="n">const.rhs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constraintsMatrix</span><span class="o">$</span><span class="n">rhs</span><span class="p">)</span><span class="w">
+
+</span><span class="c1"># Print vector of flow by edge</span><span class="w">
+</span><span class="n">solution</span><span class="o">$</span><span class="n">solution</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="visualising-the-output">Visualising the Output</h3>
+<p>To finish off, we write the resulting solution back to the <code class="highlighter-rouge">igraph</code> object and visualise the flow in the optimal solution in a plot</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">flow</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">solution</span><span class="o">$</span><span class="n">solution</span><span class="w">
+
+</span><span class="c1"># Get some colours in to visualise cost</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">color</span><span class="p">[</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s1">'royalblue'</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">color</span><span class="p">[</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s1">'yellowgreen'</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">color</span><span class="p">[</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">2</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s1">'gold'</span><span class="w">
+</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">color</span><span class="p">[</span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">cost</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="m">3</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s1">'firebrick'</span><span class="w">
+
+</span><span class="c1"># Flow as edge size,</span><span class="w">
+</span><span class="c1"># cost as colour</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">edge.width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">$</span><span class="n">flow</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/mincostflow_flow.jpeg" alt="network flow" /></p>
+
+<p>As you can see, the flow from node 1 is split between edges 1 and 2 because of the limiting capacity, even though this means that some of the flow will have to go from node 3 to node 5 at a higher cost. Expensive edges are avoided all together and have zero flow.</p>
+
+<hr />
+
+<p>That’s all for now, thanks for reading! I hope it is helpful for someone out there. If you have any comments, questions, or suggestions, please send me an email or tweet. Any feedback would be much appreciated.</p>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://janlauge.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2018 Laurens Geffert. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.js?1539431935741611000"></script>
+
+
+    </div>
+  </body>
+</html>

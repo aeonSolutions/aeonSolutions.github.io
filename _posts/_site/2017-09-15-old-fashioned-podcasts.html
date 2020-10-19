@@ -1,0 +1,57 @@
+<p><strong>How to listen to your favourite podcast without podcast app? These few lines of python might be able to help!</strong>
+<!--more--></p>
+
+<h3 id="the-problem">The Problem</h3>
+<p>My brother recently introduced me to a new podcast, <a href="http://www.br-online.de/podcast/mp3-download/bayern2/mp3-download-podcast-radiowissen.shtml">RadioWissen</a>. I can thoroughly recommend it to all German speakers. If you do not speak German, you will have to stick with the Radio4 gems such as <a href="http://www.bbc.co.uk/programmes/p02nrss1/episodes/downloads">More or less, behind the stats</a>. Now, my brother is a “laggard” in terms of technological adaptation, and as a result he does not own a smart phone. Instead, he downloads podcasts as mp3 files to his desktop PC. He wanted to download all episodes of RadioWissen, but with over 2 000 episodes published to date, this would have been very tedious to do manually.</p>
+
+<p><img src="/assets/podcasts_innovation.jpg" alt="adaptation of new technologies" /></p>
+
+<p><em>Caricature by Tom Fishburne, taken from <a href="https://www.pinterest.co.uk/timeldridge/diffusion-of-innovations/">Pinterest</a></em></p>
+
+<h3 id="the-solution">The Solution</h3>
+<p>Enter XML files that are behind the popular RSS feed format. Like any major podcast programme, RadioWissen lists all episodes in an XML file on their website, including file names and meta data. This provides the perfect basis to iterate over and programmatically download episodes. Below is my approach in python. I am using the “BeautifulSoup” library to extract URLs and the “requests” library to retrieve the files.</p>
+
+<p>```python
+from bs4 import BeautifulSoup
+import requests</p>
+
+<p>def getFile(url):
+    ‘'’Download file from URL, preserve file name’’’</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># Get name for local file
+local_filename = url.split('/')[-1]
+
+# Get and write content
+r = requests.get(url, stream=True)
+with open(local_filename, 'wb') as f:
+    f.write(r.content)
+# Print filename as confirmation
+return local_filename
+</code></pre>
+</div>
+
+<h1 id="address-of-the-xml-doc-containing-all-mp3-file-names-and-locations">Address of the xml doc containing all mp3 file names and locations</h1>
+<p>xml_address = ‘http://www.br-online.de/podcast/radiowissen/cast.xml’
+# Get text and turn it from xml into BeautifulSoup
+soup = BeautifulSoup(requests.get(xml_address).text)</p>
+
+<h1 id="download-the-latest-episode">Download the latest episode</h1>
+<p>episode = soup.find_all(‘enclosure’)[0]
+source_address = episode[‘url’]
+getFile(source_address)
+```</p>
+
+<p>You can also download all episodes using the code snippet below, but like I said, there are over 2 000 episodes published to date, so this will take several hours to complete!</p>
+
+<p>```python
+# Download all episodes
+for episode in soup.find_all(‘enclosure’):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Extract url
+source_address = episode['url']
+print('downloading' + source_address)
+getFile(source_address) ```
+</code></pre>
+</div>
+
+<p>I am still developing my python skills, which are more basic than my R knowledge. I felt like this little task was the perfect practice exercise for me, and I would be grateful for any feedback, constructive criticism, and comments on my approach.</p>

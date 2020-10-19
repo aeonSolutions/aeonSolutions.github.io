@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+
+  <title>Data Science Machine and Command Line Setup</title>
+  <meta name="description" content="<strong>Setting up a new machine for data science work can be frustrating and time
+consuming. After having to go through this process twice quite recently, and
+with several new starters about to join my team, I decided to invest some time
+to create a step-by-step guide that helps to automate the process of machine
+setup. This gets you from zero to Data Science in minutes on MacOS</strong>
+
+">
+  <meta name="author" content="Laurens Geffert">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Data Science Machine and Command Line Setup">
+  <meta name="twitter:description" content="<strong>Setting up a new machine for data science work can be frustrating and time
+consuming. After having to go through this process twice quite recently, and
+with several new starters about to join my team, I decided to invest some time
+to create a step-by-step guide that helps to automate the process of machine
+setup. This gets you from zero to Data Science in minutes on MacOS</strong>
+
+">
+  
+  <meta name="twitter:creator" content="JanLauGe">
+  
+  <meta name="twitter:image" content="/images/favicons/favicon-194x194.png" />
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Data Science Machine and Command Line Setup">
+  <meta property="og:description" content="<strong>Setting up a new machine for data science work can be frustrating and time
+consuming. After having to go through this process twice quite recently, and
+with several new starters about to join my team, I decided to invest some time
+to create a step-by-step guide that helps to automate the process of machine
+setup. This gets you from zero to Data Science in minutes on MacOS</strong>
+
+">
+  <meta property="og:image" content="/images/favicons/favicon-194x194.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/main.css?1539431935741611000">
+  <link rel="canonical" href="http://localhost:4000/2018/data-science-machine-and-command-line-setup/">
+  <link rel="alternate" type="application/rss+xml" title="Laurens Geffert" href="feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="" title="link to home of Laurens Geffert">
+          <img src="images/profile.png" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Laurens Geffert</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Data Science Portfolio</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+
+      		  <!-- Blog Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/index" title="Blog posts" class="blog-button">Blog</a></li>
+      		  </ul>
+
+      		  <!-- About Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/about" title="About the author" class="blog-button">About</a></li>
+      		  </ul>
+
+      		  <!-- Blog Roll -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/links" title="Links to other sites" class="blog-button">Links</a></li>
+      		  </ul>
+
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              
+                <!-- GitHub -->
+                <li class="navigation__item">
+                  <a href="https://www.github.com/JanLauGe" title="JanLauGe on GitHub" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+              
+
+  			      
+                <!-- Twitter -->
+                <li class="navigation__item">
+                  <a href="http://twitter.com/JanLauGe" title="@JanLauGe on Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+              
+
+              
+                <!-- LinkedIn -->
+                <li class="navigation__item">
+                  <a href="https://www.linkedin.com/in/laurensgeffert" title="laurensgeffert on LinkedIn" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">LinkedIn</span>
+                  </a>
+                </li>
+              
+
+        			
+        			  <!-- Stackoverflow -->
+        			  <li class="navigation__item">
+        				  <a href="https://stackoverflow.com/users/5457259/janlauge" title="janlauge on StackOverflow" target="_blank">
+        				    <i class="icon icon-social-stack-overflow"></i>
+        				    <span class="label">Stackoverflow</span>
+        				  </a>
+        			  </li>
+              
+
+              
+        			  <!-- Kaggle -->
+        			  <li class="navigation__item">
+        				  <a href="https://www.kaggle.com/janlauge" title="janlauge on Kaggle" target="_blank">
+        				    <i class="icon icon-trophy"></i>
+        				    <span class="label">Kaggle</span>
+        				  </a>
+        			  </li>
+              
+
+        			
+        			  <!-- Googlescholar -->
+        			  <li class="navigation__item">
+                  <a href="https://scholar.google.co.uk/citations?user=_aqDDYYAAAAJ&hl=en" title="Laurens Geffert on Google Scholar" target="_blank">
+                    <i class="icon icon-social-google-plus"></i>
+                    <span class="label">Google Scholar</span>
+                  </a>
+                </li>
+              
+
+              
+
+              
+                <!-- Email -->
+                <li class="navigation__item">
+                  <a href="mailto:laurensgeffert@gmail.com" title="Email laurensgeffert@gmail.com" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+              
+
+              <!-- RSS -->
+              <li class="navigation__item">
+                <a href="feed.xml" title="Subscribe" target="_blank">
+                  <i class="icon icon-rss"></i>
+                  <span class="label">RSS</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="12 Oct 2018" class="post-meta__date date">12 Oct 2018</time>
+      
+      &#8226; <span class="post-meta__tags">on <a href="tags/#DataScience">DataScience</a> <a href="tags/#Tools">Tools</a> <a href="tags/#Coding">Coding</a> </span>
+      
+    </div>
+    <h1 class="post-title">Data Science Machine and Command Line Setup</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>Setting up a new machine for data science work can be frustrating and time
+consuming. After having to go through this process twice quite recently, and
+with several new starters about to join my team, I decided to invest some time
+to create a step-by-step guide that helps to automate the process of machine
+setup. This gets you from zero to Data Science in minutes on MacOS</strong></p>
+
+<!--more-->
+
+<p>I’ve had to set up new data science laptops twice in the last couple of months
+and got frustrated with the tedious setup procedures. Installing libraries,
+customising settings, how do I switch RStudio to night mode again? Moreover,
+I have two new starters joining my team in the coming weeks which means that
+more system setups are just around the corner. So I decided to compile a
+guide with scripts and commands that make this process smoother and faster.</p>
+
+<p>There is many things to be said for an automatic setup over manual installation.
+Speed, reproducibility, a standardised configuration between all team members,
+and the opportunity for programmatic customisation. Among software developers
+this approach, called <code class="highlighter-rouge">.dotfile</code> configuration, is common practice and great
+introductions are available
+<a href="https://medium.com/@webprolific/getting-started-with-dotfiles-43c3602fd789">here</a>
+and <a href="https://medium.freecodecamp.org/dive-into-dotfiles-part-1-e4eb1003cff6">here</a>.
+However, so far I have only rarely encountered it on data science teams.
+This is despite the fact that data scientists frequently work with complex
+statements at the command line, have to pay particular attention to system
+setup to ensure reproducibility of their experiments, use version control, and
+commonly deal with data from a wide range of sources, many of which will require
+API tokens or access credentials. So think of this as a data science specific
+<code class="highlighter-rouge">dotfile</code> setup. There are three main components to this approach:</p>
+
+<ol>
+  <li>using command line tools and package managers instead of graphic installers
+automate first-time system setup, because this is faster, more reproducible,
+and more easily maintainable.</li>
+  <li>set up a beautiful, efficient, and powerful command line configuration,
+because it will make everyday tasks easier, because it’s awesome and because we can!</li>
+  <li>create a <code class="highlighter-rouge">.dotfile</code> repository that saves settings, application preferences,
+api keys, and access tokens, because it is more convenient and more secure than
+glueing post-its to our monitor or hard-coding passwords and tokens into our
+code that is then pushed to <a href="https://github.com/JanLauGe">GitHub</a>.</li>
+</ol>
+
+<p>Most parts of this article can be used in isolation, so unlike the British
+Prime Minister you are free to “cherry-pick” if you are so inclined.</p>
+
+<p>I am assuming here that you’re using MacOS. Parts of it may be transferable to
+a linux machine, much of it will need modification. If you’re on Windows…
+good luck! It may work with the new
+<a href="https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux">Ubuntu for Windows</a>?
+If you get a chance to test this, please let me know in the comment section below.</p>
+
+<h1 id="initial-setup">Initial Setup</h1>
+
+<p>We start of by installing install <a href="https://brew.sh/">Homebrew</a>,
+the “missing package manager for MacOS”! This bit actually requires some user
+input (<yes> and <password>), so we will split that from the rest of the basic
+installations.</password></yes></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+</code></pre></div></div>
+
+<p>Once that is done we can use <code class="highlighter-rouge">homebrew</code> for some additional household essentials.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew install caskroom/cask/brew-cask
+brew tap caskroom/cask
+brew cask install
+
+brew install wget htop git keychain
+
+brew cask install google-chrome atom vlc spotify dropbox
+# You can launch and configure dropbox with
+open ~/Applications/Dropbox.app
+
+# Java SDK
+brew cask install java
+# (this may require your password again)
+</code></pre></div></div>
+
+<h1 id="powerlevel9k-command-line">Powerlevel9k Command Line</h1>
+
+<p>Now it’s time to beef up our command line. This is something that many
+software developers and engineers spend a lot of time on, to the point where
+some are holding competitions to show off their great shells. Many Data
+Scientists, on the other hand, seem to neglect command line customisation.
+I think that this is a mistake. Let me convince you by highlighting some of
+the neat extra features that we can add with a little bit of extra setup effort:</p>
+
+<ul>
+  <li>beautiful command prompt</li>
+  <li>syntax highlighting</li>
+  <li>auto completion</li>
+  <li>read/write flags</li>
+  <li>execution timing</li>
+  <li>git support with repo status tracking</li>
+</ul>
+
+<p>(powerlevel9k demo)[https://camo.githubusercontent.com/b5d7eb49a30bfe6bdb5706fa3c9be95fe8e5956e/687474703a2f2f67696679752e636f6d2f696d616765732f70396b6e65772e676966]</p>
+
+<p>The most nerdy set of productivity tools on the block! To make this work
+we will need <a href="https://www.iterm2.com/">iTerm2</a> and <a href="http://www.zsh.org/">zsh</a>.
+iTerm2 is a macOS terminal replacement with many additional features, such as
+more display customisation, better hotkeys, and fantastic split pane
+functionality. Zsh is a shell designed for interactive use. It works
+particularly well with <a href="https://ohmyz.sh/"><code class="highlighter-rouge">oh-my-zsh</code></a>, a configuration tool
+that helps with setting up everything just the way we like it. They have great
+stickers, too ;)</p>
+
+<p>While we’re at it we will also install the Powerline terminal fonts, which
+will be needed for <a href="https://github.com/bhilburn/powerlevel9k">powerlevel9k</a>,
+the zsh theme of my choosing.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># install iTerm2
+brew cask install iterm2
+
+# install zsh
+brew install zsh
+
+# get oh-my-zsh configuration tool
+sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# (this may require your password again)
+
+# get powerlevel9k theme for zsh
+git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+# and the corresponding font
+wget -O /Library/Fonts/font_sourcecodepro_powerline_awesomeregular.ttf https://github.com/Falkor/dotfiles/blob/master/fonts/SourceCodePro+Powerline+Awesome+Regular.ttf?raw=true
+
+# change zsh theme to powerlevel9k
+sed -i '' 's/ZSH_THEME="robbyrussell"/POWERLEVEL9K_MODE='awesome-patched'\
+ZSH_THEME="powerlevel9k\/powerlevel9k"/g' .zshrc
+</code></pre></div></div>
+
+<p>Now you should add iTerm2 to the dock bar and/or assign a hot key of your
+choosing. Change the colour scheme (<code class="highlighter-rouge">Menu bar</code> &gt; <code class="highlighter-rouge">Profiles</code> &gt;
+<code class="highlighter-rouge">Open Profiles...</code> &gt; <code class="highlighter-rouge">Select "Default"</code> &gt; <code class="highlighter-rouge">Edit Profiles...</code>) as you see fit.
+Definitively change the font to <code class="highlighter-rouge">SourceCodePro+Powerline+Awesome Regular</code>.
+This last step is important as <strong>POWERLEVEL9K WON’T WORK PROPERLY WITHOUT THIS</strong>
+and you will end up with cryptic symbols on your prompt instead.</p>
+
+<p>If you don’t have strong feelings about
+colour style preference, feel free to use my profile template. You can install
+it as a dynamic profile with the command below. DynamicProfiles enable you to
+share your preferences between different machines. You can create your own by
+exporting your profile from the profile menu to a JSON file and copying it to
+the same location:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># copy the profile settings for iTerm2 to DynamicProfiles folder
+wget -O ~/Library/Application Support/iTerm2/DynamicProfiles https://github.com/JanLauGe/.dotfiles/blob/master/iterm_profile.json
+</code></pre></div></div>
+
+<p>There is a wide range of plugins available for iTerm2 and zsh. I
+automatically add a few that I find useful by installing them with homebrew or
+cloning the code from github. Afterwards I add them to the <code class="highlighter-rouge">.zshrc</code>
+configuration file with <code class="highlighter-rouge">sed</code>. Side note: Alternatively, we could just copy
+a pre-existing <code class="highlighter-rouge">.zshrc</code> but I felt that adding lines using <code class="highlighter-rouge">sed</code> kept things
+more transparent and would allow for applying individual parts of the script
+to already set up machines.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Add auto suggestions (for Oh My Zsh)
+# This plugin suggests the commands you used in your terminal history.
+# You just have to type → to fill it entirely !
+git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+# Note: $ZSH_CUSTOM/plugins path is by default ~/.oh-my-zsh/custom/plugins
+
+brew install zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" &gt;&gt; ${ZDOTDIR:-$HOME}/.zshrc
+
+# Add the plugins to the list of plugins in ~/.zshrc configuration file :
+sed -i '' '/^plugins=(/  a\
+ \ \ zsh-autosuggestions \
+ \ \ web-search \
+ \ \ jsontools \
+ \ \ macports \
+ \ \ node \
+ \ \ osx \
+ \ \ sudo \
+ \ \ thor \
+ \ \ docker \
+' .zshrc
+
+# set default user in .zshrc to avoid the nasty username@machine prompt
+echo 'export DEFAULT_USER="$(whoami)"' &gt;&gt; .zshrc
+</code></pre></div></div>
+
+<h1 id="data-science-essentials">Data Science Essentials</h1>
+
+<p><a href="https://www.datascienceatthecommandline.com/">Data science at the command line</a>
+is great, but I doubt it will be enough to do all of your day-to-day tasks.
+We need R &amp; Python, and while the GUI installers for
+<a href="https://www.rstudio.com/">Rstudio</a> and <a href="https://www.anaconda.com">Anaconda</a>
+make the installation child’s play, it would be nice to have it as part of this
+initial setup script as well. Moreover, I find myself accumulating eclectic
+collections of packages and libraries. Instead of reinstalling all of these
+manually I have included them here as well:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#### install anaconda ----
+# May need updating for conda version
+wget -O anaconda.sh https://repo.anaconda.com/archive/Anaconda3-5.3.0-MacOSX-x86_64.sh
+./anaconda.sh -b -p ~/anaconda3
+rm anaconda.sh
+
+# append conda path to bash profile
+echo 'export PATH="~/anaconda3/bin:$PATH"' &gt;&gt; ~/.zshrc
+# reload profile
+source .zshrc
+
+# create new anaconda virtual environments
+conda update conda
+conda config --add channels conda-forge
+conda create --name dev2 python=2.7
+conda create --name dev3 python=3.6
+# and switch to it to avoid using the system python
+source activate dev3
+# do this every time we start a new session
+echo 'source activate dev3' &gt;&gt; ~/.zshrc
+
+# Install a few libraries that do not ship with anaconda
+pip install awscli tensorflow tensorflow-gpu keras
+
+
+#### install R and RStudio ----
+# this is required for some advanced plotting
+brew cask install xquartz
+# (will need password again)
+
+brew install --with-x11 r
+brew cask install --appdir=/Applications rstudio
+# Note the --appdir option which will use /Applications instead of ~/Applications
+
+# install R packages
+RScript -e "install.packages(c(
+  'caret','cluster','crayon','crosstalk','curl','CVST','data.table','DBI',
+  'devtools','doMC','dtplyr','foreach','foreign','ggplot2','ggthemes','glmnet',
+  'haven','here','htmltools','htmlwidgets','httr','igraph','jsonlite','knitr',
+  'labeling','lattice','lazyeval','leaflet','lubridate','magrittr','markdown',
+  'mime','praise','psych','purrr','raster','RColorBrewer','Rcpp','readr',
+  'rmarkdown','rpart','rvest','scales','shiny','stringr','survival','testthat',
+  'tidyverse','units','viridis','xml2','aws.s3','checkmate','feather','future',
+  'gapminder','keras','lintr','plotly','plotROC','prettyunits','pROC','progress',
+  'randomForest','ranger','reticulate','rJava','RJDBC','RJSONIO','RODBC',
+  'roxygen2','RPostgreSQL','Rtsne','slackr','sf','stringdist','tensorflow',
+  'text2vec','vegan','xgboost','XML'),
+  repos='http://cran.us.r-project.org')"
+
+# This library for snowflake from github
+RScript -e "library(devtools); install_github('snowflakedb/dplyr-snowflakedb')"
+</code></pre></div></div>
+
+<h1 id="settings-and-access">Settings and Access</h1>
+
+<p>So now we are done with the basic setup on our local machine. However, there are
+still ssh keys, api access tokens, and config files to configure. This can take
+a lot of time and energy, and having different tokens on different machines
+can be confusing or even unsafe (I have seen far too many people hard-code
+their AWS credentials into their notebooks!).</p>
+
+<p>I’ve therefore gone for an approach of creating a central repository for
+identity management and protecting it with a single strong master password.
+For obvious reasons I will not go into too much detail on my exact approach to
+this, but let’s just say that we have synced all our identity files to a local
+folder called <code class="highlighter-rouge">.dotfiles</code>. From there we can sync them into our home directory,
+as succinctly explained by Ajmal Siddiqui
+<a href="https://medium.freecodecamp.org/dive-into-dotfiles-part-2-6321b4a73608">in this post</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rsync .dotfiles ~
+</code></pre></div></div>
+
+<p>and since we want to do that whenever we start a new terminal session:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo 'rsync .dotfiles ~' &gt;&gt; .zshrc
+</code></pre></div></div>
+
+<p>This will synchronise all files in the <code class="highlighter-rouge">.dotfiles</code> folder to the home directory
+where they are available to the various applications or our custom scripts
+that may use them. Files that I now use this for include:</p>
+
+<ul>
+  <li>.ssh - ssh keys for Github, AWS, etc.</li>
+  <li>.aws - AWS credentials needed for the <a href="https://aws.amazon.com/cli/"><code class="highlighter-rouge">aws cli</code></a></li>
+  <li>.gitconfig - To track my contributions to version controlled code bases</li>
+  <li>.kaggle.json - Access token to use the <a href="https://github.com/Kaggle/kaggle-api">new Kaggle API</a></li>
+  <li>.google - Access token for the google maps SDK that I used <a href="https://janlauge.github.io/2017/extracting-location-history/">here</a></li>
+</ul>
+
+<p>So that’s all! As always, I hope it is useful for someone. Please let me know
+any thoughts you may have in the comments below. Also, follow me on
+<a href="https://twitter.com/JanLauGe">twitter</a>, connect with me on
+<a href="https://www.linkedin.com/in/laurensgeffert/">linkedIn</a>,
+and feel free to email me.</p>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://janlauge.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2018 Laurens Geffert. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.js?1539431935741611000"></script>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+
+  <title>fastai Deep Learning Image Classification</title>
+  <meta name="description" content="<strong>Here I summarise learnings from lesson 1 of the fast.ai course on deep learning.
+fast.ai is a deep learning online course for coders, taught by Jeremy Howard.
+Its tag line is to “make neural nets uncool again”. I started the class a couple
+of days ago and have been impressed with how fast it got me to apply the
+methods, an approach described by them as top-down learning. I am writing
+this blog post to document and reflect on the things that I learned and to help
+other people that may be interested getting started with the class.</strong>
+
+">
+  <meta name="author" content="Laurens Geffert">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="fastai Deep Learning Image Classification">
+  <meta name="twitter:description" content="<strong>Here I summarise learnings from lesson 1 of the fast.ai course on deep learning.
+fast.ai is a deep learning online course for coders, taught by Jeremy Howard.
+Its tag line is to “make neural nets uncool again”. I started the class a couple
+of days ago and have been impressed with how fast it got me to apply the
+methods, an approach described by them as top-down learning. I am writing
+this blog post to document and reflect on the things that I learned and to help
+other people that may be interested getting started with the class.</strong>
+
+">
+  
+  <meta name="twitter:creator" content="JanLauGe">
+  
+  <meta name="twitter:image" content="/images/favicons/favicon-194x194.png" />
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="fastai Deep Learning Image Classification">
+  <meta property="og:description" content="<strong>Here I summarise learnings from lesson 1 of the fast.ai course on deep learning.
+fast.ai is a deep learning online course for coders, taught by Jeremy Howard.
+Its tag line is to “make neural nets uncool again”. I started the class a couple
+of days ago and have been impressed with how fast it got me to apply the
+methods, an approach described by them as top-down learning. I am writing
+this blog post to document and reflect on the things that I learned and to help
+other people that may be interested getting started with the class.</strong>
+
+">
+  <meta property="og:image" content="/images/favicons/favicon-194x194.png" />
+
+  <link rel="apple-touch-icon" sizes="57x57" href="images/favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="images/favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="images/favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="images/favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="images/favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="images/favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="images/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="images/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="images/favicons/manifest.json">
+  <link rel="shortcut icon" href="images/favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/main.css?1539431935741611000">
+  <link rel="canonical" href="http://localhost:4000/2018/fast-ai-part1_deep-learning-image-classifier-with-nifty-tricks/">
+  <link rel="alternate" type="application/rss+xml" title="Laurens Geffert" href="feed.xml">
+</head>
+
+
+  <body>
+    <span class="mobile btn-mobile-menu">
+  <i class="icon icon-list btn-mobile-menu__icon"></i>
+  <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+</span>
+
+<header class="panel-cover" style="background-image: url(images/cover.jpg)">
+  <div class="panel-main">
+
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+        <a href="" title="link to home of Laurens Geffert">
+          <img src="images/profile.png" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">Laurens Geffert</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">Data Science Portfolio</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+
+      		  <!-- Blog Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/index" title="Blog posts" class="blog-button">Blog</a></li>
+      		  </ul>
+
+      		  <!-- About Button -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/about" title="About the author" class="blog-button">About</a></li>
+      		  </ul>
+
+      		  <!-- Blog Roll -->
+      		  <ul class="navigation">
+      			  <li class="navigation__item"><a href="/links" title="Links to other sites" class="blog-button">Links</a></li>
+      		  </ul>
+
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+              
+                <!-- GitHub -->
+                <li class="navigation__item">
+                  <a href="https://www.github.com/JanLauGe" title="JanLauGe on GitHub" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+              
+
+  			      
+                <!-- Twitter -->
+                <li class="navigation__item">
+                  <a href="http://twitter.com/JanLauGe" title="@JanLauGe on Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+              
+
+              
+                <!-- LinkedIn -->
+                <li class="navigation__item">
+                  <a href="https://www.linkedin.com/in/laurensgeffert" title="laurensgeffert on LinkedIn" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">LinkedIn</span>
+                  </a>
+                </li>
+              
+
+        			
+        			  <!-- Stackoverflow -->
+        			  <li class="navigation__item">
+        				  <a href="https://stackoverflow.com/users/5457259/janlauge" title="janlauge on StackOverflow" target="_blank">
+        				    <i class="icon icon-social-stack-overflow"></i>
+        				    <span class="label">Stackoverflow</span>
+        				  </a>
+        			  </li>
+              
+
+              
+        			  <!-- Kaggle -->
+        			  <li class="navigation__item">
+        				  <a href="https://www.kaggle.com/janlauge" title="janlauge on Kaggle" target="_blank">
+        				    <i class="icon icon-trophy"></i>
+        				    <span class="label">Kaggle</span>
+        				  </a>
+        			  </li>
+              
+
+        			
+        			  <!-- Googlescholar -->
+        			  <li class="navigation__item">
+                  <a href="https://scholar.google.co.uk/citations?user=_aqDDYYAAAAJ&hl=en" title="Laurens Geffert on Google Scholar" target="_blank">
+                    <i class="icon icon-social-google-plus"></i>
+                    <span class="label">Google Scholar</span>
+                  </a>
+                </li>
+              
+
+              
+
+              
+                <!-- Email -->
+                <li class="navigation__item">
+                  <a href="mailto:laurensgeffert@gmail.com" title="Email laurensgeffert@gmail.com" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+              
+
+              <!-- RSS -->
+              <li class="navigation__item">
+                <a href="feed.xml" title="Subscribe" target="_blank">
+                  <i class="icon icon-rss"></i>
+                  <span class="label">RSS</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2 May 2018" class="post-meta__date date">2 May 2018</time>
+      
+      &#8226; <span class="post-meta__tags">on <a href="tags/#DataScience">DataScience</a> <a href="tags/#Python">Python</a> <a href="tags/#DeepLearning">DeepLearning</a> </span>
+      
+    </div>
+    <h1 class="post-title">fastai Deep Learning Image Classification</h1>
+  </header>
+
+  <section class="post">
+    <p><strong>Here I summarise learnings from lesson 1 of the fast.ai course on deep learning.
+fast.ai is a deep learning online course for coders, taught by Jeremy Howard.
+Its tag line is to “make neural nets uncool again”. I started the class a couple
+of days ago and have been impressed with how fast it got me to apply the
+methods, an approach described by them as top-down learning. I am writing
+this blog post to document and reflect on the things that I learned and to help
+other people that may be interested getting started with the class.</strong></p>
+
+<!--more-->
+
+<p>The fast.ai library is a high-level library based on PyTorch, which tries to
+take a selection of best-practice approaches from cutting edge deep learning
+research and make them into a collection of intelligent default settings.</p>
+
+<p>Lesson 2 outlined the fundamentals of computer vision and building image
+classification models. My homework: get my hands on my own image dataset and
+use it to train a classifier myself. I chose to attempt a classifier that can
+distinguish between sharks and dolphins, using images from google image search.
+Read along for a detailed walk through below.</p>
+
+<h2 id="getting-an-image-dataset">Getting an Image Dataset</h2>
+
+<p><a href="https://pypi.org/project/google-images-download/1.4.4/">This handy tool</a>
+allows us to get images directly from google image search.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pip install google_images_download
+</code></pre></div></div>
+
+<p>For more than 100 images we also need to install chromedriver and dependencies:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>apt-get install python-selenium python3-selenium libxi6 libgconf-2-4 chromium-chromedriver
+</code></pre></div></div>
+
+<p>Note that I had some problems with accessing the chrome driver from jupyter
+notebooks. Changing ownership of the file with
+<code class="highlighter-rouge">chmod 777  /usr/local/bin/chromedriver</code>
+solved this for me.</p>
+
+<p>Now we can run a query for images. Results are named as the number of the result
+plus the original file name, downloaded, and saved locally. Note that you
+should make sure to utilise the <code class="highlighter-rouge">usage_rights</code> flag in order to get images
+that are cleared for this type of use.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">google_images_download</span> <span class="kn">import</span> <span class="n">google_images_download</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">'/home/paperspace/data/sharksdolphins/'</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">google_images_download</span><span class="o">.</span><span class="n">googleimagesdownload</span><span class="p">()</span>  
+
+<span class="n">arguments</span> <span class="o">=</span> <span class="p">{</span>
+ <span class="s">"keywords"</span><span class="p">:</span> <span class="s">'"shark","dolphin"'</span><span class="p">,</span>
+ <span class="s">"print_urls"</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+ <span class="s">"limit"</span><span class="p">:</span> <span class="s">"10000"</span><span class="p">,</span>
+ <span class="s">"output_directory"</span><span class="p">:</span> <span class="s">"sharksdolphins/train/"</span><span class="p">,</span>
+ <span class="s">"format"</span><span class="p">:</span> <span class="s">"jpg"</span><span class="p">,</span>
+ <span class="s">"usage_rights"</span><span class="p">:</span> <span class="s">"labeled-for-nocommercial-reuse"</span><span class="p">,</span>
+ <span class="s">"chromedriver"</span><span class="p">:</span> <span class="s">"/usr/local/bin/chromedriver"</span>
+<span class="p">}</span>
+
+<span class="n">response</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">arguments</span><span class="p">)</span>
+
+<span class="c"># func for renaming an image file</span>
+<span class="k">def</span> <span class="nf">image_rename</span><span class="p">(</span><span class="nb">file</span><span class="p">):</span>
+    <span class="n">file_index</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">r'\A\d*'</span><span class="p">,</span> <span class="nb">file</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">file_index</span> <span class="o">=</span> <span class="n">file_index</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file_index</span><span class="o">+</span><span class="s">'.jpg'</span>
+
+<span class="c"># func for renaming all files in a folder</span>
+<span class="k">def</span> <span class="nf">image_rename_all</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
+    <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">folder</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="n">folder</span><span class="o">+</span><span class="n">image_rename</span><span class="p">(</span><span class="nb">file</span><span class="p">))</span> <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+<span class="c"># rename files</span>
+<span class="n">folders</span> <span class="o">=</span> <span class="p">[</span><span class="s">'data/sharksdolphins/train/shark/'</span><span class="p">,</span>
+           <span class="s">'data/sharksdolphins/train/dolphin/'</span><span class="p">]</span>
+<span class="p">[</span><span class="n">image_rename_all</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span> <span class="k">for</span> <span class="n">folder</span> <span class="ow">in</span> <span class="n">folders</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>The above query returned about 800 images each. I ended up speeding through
+these images manually and removing unsuitable images manually.</p>
+
+<p>We need a training and a validation set. Making this work with fast.ai is easily
+done by adapting the recommended folder structure of a <code class="highlighter-rouge">data</code> folder with two
+sub-folders (<code class="highlighter-rouge">train</code> and <code class="highlighter-rouge">valid</code>), each of which have a subfolder with images
+for each class.</p>
+
+<p>The code chunk below takes the images downloaded earlier and randomly splits
+them into 80% training data and 20% validation data. Don’t forget to set a
+random seed so that your results stay reproducible.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># split files into test and training set# split</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="s">'data/sharksdolphins/'</span>
+<span class="n">files_sharks</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">f</span><span class="s">'{PATH}train/shark'</span><span class="p">)</span>
+<span class="n">files_dolphins</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">f</span><span class="s">'{PATH}train/dolphin'</span><span class="p">)</span>
+
+<span class="c"># sample from each class to create a validation set</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1234</span><span class="p">)</span>
+<span class="n">files_sharks_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+    <span class="n">files_sharks</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files_sharks</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+<span class="n">files_dolphins_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+    <span class="n">files_dolphins</span><span class="p">,</span>
+    <span class="n">size</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">files_dolphins</span><span class="p">)</span> <span class="o">/</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+    <span class="n">p</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+
+<span class="c"># move validation set images into validation folder</span>
+<span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s">'train/shark/'</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="n">PATH</span><span class="o">+</span><span class="s">'valid/shark/'</span><span class="o">+</span><span class="nb">file</span><span class="p">)</span>
+  <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files_sharks_val</span><span class="p">]</span>
+<span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">PATH</span><span class="o">+</span><span class="s">'train/dolphin/'</span><span class="o">+</span><span class="nb">file</span><span class="p">,</span> <span class="n">PATH</span><span class="o">+</span><span class="s">'valid/dolphin/'</span><span class="o">+</span><span class="nb">file</span><span class="p">)</span>
+  <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files_dolphins_val</span><span class="p">]</span>
+</code></pre></div></div>
+<p>As you will see, collecting the data was the hardest part and
+everyting from here onward is quite straight-forward thanks to the high level
+abstractions provided by fast.ai</p>
+
+<h2 id="training-a-model">Training a Model</h2>
+
+<p>Now we can finally start to train our image classifier. I am using a
+<a href="https://www.paperspace.com/console/machines">paperspace</a> instance with the
+<a href="https://github.com/reshamas/fastai_deeplearn_part1/blob/master/tools/paperspace.md">setup</a>
+recommended and provided by <a href="http://course.fast.ai/start.html">fast.ai</a>.</p>
+
+<p><strong>Train a First Model</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">'/home/paperspace/'</span><span class="p">)</span>
+<span class="c"># append fast.ai local folder to system path so modules can be imported</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">'/home/paperspace/fastai/'</span><span class="p">)</span>
+<span class="c"># automatically reload updated sub-modules</span>
+<span class="o">%</span><span class="n">reload_ext</span> <span class="n">autoreload</span>
+<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
+<span class="c"># in-line plots</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+
+<span class="kn">from</span> <span class="nn">fastai.imports</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.transforms</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.conv_learner</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.model</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.dataset</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.sgdr</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">fastai.plots</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># set path of data folder</span>
+<span class="n">PATH</span> <span class="o">=</span> <span class="s">"data/sharksdolphins/"</span>
+<span class="c"># set size images should be resized to</span>
+<span class="n">sz</span> <span class="o">=</span> <span class="mi">224</span>
+<span class="c"># First model</span>
+<span class="n">arch</span> <span class="o">=</span> <span class="n">resnet34</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">ImageClassifierData</span><span class="o">.</span><span class="n">from_paths</span><span class="p">(</span><span class="n">PATH</span><span class="p">,</span> <span class="n">tfms</span><span class="o">=</span><span class="n">tfms_from_model</span><span class="p">(</span><span class="n">arch</span><span class="p">,</span> <span class="n">sz</span><span class="p">),</span> <span class="n">bs</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">learn</span> <span class="o">=</span> <span class="n">ConvLearner</span><span class="o">.</span><span class="n">pretrained</span><span class="p">(</span><span class="n">arch</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">precompute</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Jeremy explained the learning rate finder that uses the approach of cyclical
+learning rates as outlined by Leslie Smith (https://arxiv.org/abs/1506.01186).
+Using the <code class="highlighter-rouge">lr_find</code> method and then plotting the learning rate against loss.
+We now want to visually choose the “The highest learning rate we can find where
+the loss is still clearly improving”. Note here that the learning rate finder
+did initially not work so well for my small-ish dataset. I had to adjust the
+batch size to make it work correctly
+(see <code class="highlighter-rouge">bs=16</code> argument in the <code class="highlighter-rouge">ImageClassifierData</code> call above)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span><span class="o">.</span><span class="n">lr_find</span><span class="p">()</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">sched</span><span class="o">.</span><span class="n">plot_lr</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/fastai1_learningratefinder.png" alt="learning rate finder" /></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>epoch       </th>
+      <th>trn_loss       </th>
+      <th>val_loss       </th>
+      <th>accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.435999</td>
+      <td>0.267501</td>
+      <td>0.925</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.3081</td>
+      <td>0.29459</td>
+      <td>0.9</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.2548</td>
+      <td>0.235716</td>
+      <td>0.925</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.214654</td>
+      <td>0.229093</td>
+      <td>0.93125</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.237024</td>
+      <td>0.162347</td>
+      <td>0.9375</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Over 93% accuracy! Really nice results already!</p>
+
+<p>Let’s see if we can improve things even further.</p>
+
+<p><strong>Train a Second Model</strong></p>
+
+<p>Now let’s start training some of the lower layers and retraining these with
+differential learning rate. Jeremy talks about unfreezing here, but a friend
+that I talked to about this called it thawing instead, and I like that
+terminology, as it implies the differential learning rates with fast-changing
+weights at the last layer but slower updates in the lower layers.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># unfreeze pretrained layers</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">unfreeze</span><span class="p">()</span>
+<span class="c"># set differential learning rate</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1e-4</span><span class="p">,</span><span class="mf">1e-3</span><span class="p">,</span><span class="mf">1e-2</span><span class="p">])</span>
+<span class="c"># train new model</span>
+<span class="n">learn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">lr</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">cycle_len</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cycle_mult</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>epoch       </th>
+      <th>trn_loss       </th>
+      <th>val_loss       </th>
+      <th>accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0.475365</td>
+      <td>0.365881</td>
+      <td>0.89375</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>0.278049</td>
+      <td>0.177107</td>
+      <td>0.94375</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>0.174708</td>
+      <td>0.178467</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>0.120919</td>
+      <td>0.230777</td>
+      <td>0.95625</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0.093978</td>
+      <td>0.148054</td>
+      <td>0.95625</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>0.081571</td>
+      <td>0.200582</td>
+      <td>0.95</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>0.055903</td>
+      <td>0.198029</td>
+      <td>0.95</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>A little bit better yet. Let’s look at the confusion matrix and
+some of the misclassified images:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># get predictions and transform to class probability values</span>
+<span class="n">log_preds</span> <span class="o">=</span> <span class="n">learn</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">log_preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_preds</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c"># plot confusion matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">val_y</span><span class="p">,</span> <span class="n">preds</span><span class="p">)</span>
+<span class="n">plot_confusion_matrix</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">classes</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="http://localhost:4000/assets/fastai1_confusionmatrix.png" alt="confusion matrix" /></p>
+
+<p>We should also plot some of the images to develop an intuition about where
+our classifier does well and where it doesn’t. Here is the one misclassified
+dolphin and the top 4 misclassified sharks:</p>
+
+<p><img src="http://localhost:4000/assets/fastai1_misclass_dolphin1.png" alt="misclassified dolphin" /></p>
+
+<p><img src="http://localhost:4000/assets/fastai1_missclass_shark1.png" alt="misclassified sharks" /></p>
+
+<h2 id="discussion">Discussion</h2>
+
+<p>You can see that we got some pretty strong results in a very short amount of
+time and using a very limited dataset! There is obviously many more things that
+could be done to improve this model further.</p>
+
+<p><strong>Weighting the Classes</strong></p>
+
+<p>In our example of sharks and dolphins, we are currently treating all
+misclassifications equally. This may not be the right approach! If the model was
+used to monitor a beach for sharks, for example, failing to recognize a dolphin
+would not be a problem, while failing to recognize a shark could potentially
+result in human fatalities. In this case, it might be advisable to retrain the
+model with a biased weighting function to make sure our recall on shark images
+is higher.</p>
+
+<p><strong>Data Leakage</strong></p>
+
+<p>Looking at images that were misclassified or low-confidence predictions, I
+realised that my training set introduced a number of hidden biases to the model.
+For example, a number of dolphin pictures have people in them that are touching
+the dolphin. This is less prevalent with the shark pictures, for obvious
+reasons. As a result, the few shark pictures with human arms and hands in them
+and near the shark seem to end up with lower confidence for the shark class.
+For the only misclassified dolphin in the dataset, on the other hand, I think
+that the shark-like pose (frontal, widely opened mouth) may have played a role
+in the model mistaking this image for a shark image.</p>
+
+<p>This kind of data leakage is increasingly discussed and criticised in deep
+learning applications, so it is good to be aware and keep an eye out for them.
+Since my model is not going into production for Baywatch any time soon, I am
+just glad I found it nicely illustrated in this relatively small dataset.</p>
+
+  </section>
+  <section id="disqus_thread"></section><!-- /#disqus_thread -->
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+     */
+    /*
+    var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() {  // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+
+        s.src = 'https://janlauge.disqus.com/embed.js';
+
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+      </div>
+
+      <footer class="footer">
+  <span class="footer__copyright">&copy; 2018 Laurens Geffert. All rights reserved.</span>
+</footer>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/main.js?1539431935741611000"></script>
+
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+<p><strong>Or how to get all your X from A to B for very little C. In this post I create an R implementation of optimizing a “minimum cost flow problem” in R using graph theory and the lpSolve package. This can be useful for transportation and allocation applications in supply chain, logistics, and planning.</strong></p>
+
+<!--more-->
+
+<h3 id="the-problem">The Problem</h3>
+<p>Recently I came across a business problem that I interpreted as a “minimum cost flow problem”. According to Wikipedia it is an optimization and decision problem to find the cheapest possible way of sending a certain amount of flow through a flow network. A typical application of this problem involves finding the best delivery route from a factory to a warehouse where the road network has some capacity and cost associated.</p>
+
+<p>I was hoping for a readily available implementation of an algorithm for this problem via an R-package, but my search on CRAN did not yield any results. So I turned to StackOverflow. You can find my <a href="https://stackoverflow.com/questions/43616480/minimum-cost-flow-network-optimization-in-r/">question here</a>. Ultimately, I ended up answering it myself. If this is useful to you, I’d appreciate your upvote :)</p>
+
+<h3 id="example">Example</h3>
+<p>Let’s start off by building an example graph for illustrating the problem. I used a manually created <code class="highlighter-rouge">edgelist</code>, defining a directional graph. Each edge has a <code class="highlighter-rouge">from</code> node and a <code class="highlighter-rouge">to</code> node, given as numeric ID, as well as a capacity <em>c</em> (the maximum number of units that can pass through this connection), and a cost <em>a</em> (the cost of passing a single unit through this connection). The edgelist data frame can be turned into a graph object using the <code class="highlighter-rouge">igraph</code> package and its <code class="highlighter-rouge">graph_from_edgelist</code> function.</p>
+
+<p>```r
+library(tidyverse)
+library(igraph)
+library(magrittr)</p>
+
+<h1 id="create-edgelist">create edgelist</h1>
+<p>edgelist &lt;- data.frame(
+  from = c(1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6, 7, 8),
+  to = c(2, 3, 4, 5, 6, 4, 5, 6, 7, 8, 7, 8, 7, 8, 9, 9),
+  ID = seq(1, 16, 1),
+  capacity = c(20, 30, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99),
+  cost = c(0, 0, 1, 2, 3, 4, 3, 2, 3, 2, 3, 4, 5, 6, 0, 0))</p>
+
+<h1 id="make-edgelist-into-graph-object">make edgelist into graph object</h1>
+<p>g &lt;- graph_from_edgelist(as.matrix(edgelist[,c(‘from’,’to’)]))</p>
+
+<h1 id="add-properties">add properties</h1>
+<p>E(g)$capacity &lt;- edgelist$capacity
+E(g)$cost &lt;- edgelist$cost</p>
+
+<p>plot(g, edge.label = E(g)$capacity)
+plot(g, edge.label = E(g)$cost)
+```</p>
+
+<p>The result looks like this:</p>
+
+<p><img src="/assets/mincostflow_capacity.jpeg" alt="network capacity" /></p>
+
+<p><img src="/assets/mincostflow_cost.jpeg" alt="network cost" /></p>
+
+<p>Note that the example I chose only uses non-standard capacities in the edges coming out of node 1, and only uses non-zero cost values in the edges of the middle layer. I separated cost and capacity out like that to keep it simple for this example. In a real world application the values are likely more mixed, and there would probably be a lot more edges.</p>
+
+<hr />
+
+<p>With our example graph we are now ready to formulate the objective function and the constraints of our optimization. I use the function below to generate the inputs for our solver. They consist of a left-hand side <code class="highlighter-rouge">lhs</code> (a vector of integers representing coefficients of the flow through each edge), a direction <code class="highlighter-rouge">dir</code> (&lt;, ==, &gt;), and a right-hand side <code class="highlighter-rouge">rhs</code> giving the numeric value that will need to be met by each constraint.</p>
+
+<h3 id="the-solution">The Solution</h3>
+<p>Our objective is to minimize the total cost incurred, subject to the relevant constraints</p>
+
+<script type="math/tex; mode=display">minimize(\sum_{i = 1}^{E} f(x_i) * c)</script>
+
+<p>Constraints are grouped into three major categories:
+1. <strong>capacity constraints:</strong> Flow <em>f</em> through any given edge <em>x</em> can’t be higher than the edge’s capacity <em>c</em>.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+f(x)<=c %]]></script>
+
+<ol>
+  <li><strong>node flow constraints:</strong> All units in our problem should pass the network. We cannot retain any units in the network, and we cannot have flow out of a node without the equivalent flowing in to that node as well. Therefore, the sum of units flowing through incoming nodes <em>E(n)</em> into a node needs to be exactly equal to the sum of units flowing through outgoing nodes <em>E(o)</em> out of that node.</li>
+</ol>
+
+<script type="math/tex; mode=display">\sum_{i\in E(n))}f(x_i)=\sum_{i\in E(o))}f(x_i)*-1=0</script>
+
+<ol>
+  <li><strong>initialisation constraints:</strong> The node flow constraint is true for all except the source node <em>s</em> and the target node <em>t</em>. We are looking for a solution that pushes a fixed number of units from <em>s</em> through the network into <em>t</em>. Therefore, the sum of units flowing through the outgoing nodes <em>E(s)</em> out of <em>s</em> and the sum of units flowing through the incoming nodes <em>E(t)</em> into <em>t</em> needs to be exactly equal to that fixed number of units.</li>
+</ol>
+
+<script type="math/tex; mode=display">\sum_{i\in E(s))}f(x_i)=\sum_{i\in E(t))}f(x_i)*-1=total flow</script>
+
+<p>I have implemented all of that in the function below:</p>
+
+<p>```r
+createConstraintsMatrix &lt;- function(edges, total_flow) {</p>
+
+<p># Edge IDs to be used as names
+  names_edges &lt;- edges$ID
+  # Number of edges
+  numberof_edges &lt;- length(names_edges)</p>
+
+<p># Node IDs to be used as names
+  names_nodes &lt;- c(edges$from, edges$to) %&gt;% unique
+  # Number of nodes
+  numberof_nodes &lt;- length(names_nodes)</p>
+
+<p># Build constraints matrix
+  constraints &lt;- list(
+    lhs = NA,
+    dir = NA,
+    rhs = NA)</p>
+
+<p>#’ Build capacity constraints ————————————————
+  #’ Flow through each edge should not be larger than capacity.
+  #’ We create one constraint for each edge. All coefficients zero
+  #’ except the ones of the edge in question as one, with a constraint
+  #’ that the result is smaller than or equal to capacity of that edge.</p>
+
+<p># Flow through individual edges
+  constraints$lhs &lt;- edges$ID %&gt;%
+    length %&gt;%
+    diag %&gt;%
+    set_colnames(edges$ID) %&gt;%
+    set_rownames(edges$ID)
+  # should be smaller than or equal to
+  constraints$dir &lt;- rep(‘&lt;=’, times = nrow(edges))
+  # than capacity
+  constraints$rhs &lt;- edges$capacity</p>
+
+<p>#’ Build node flow constraints ———————————————–
+  #’ For each node, find all edges that go to that node
+  #’ and all edges that go from that node. The sum of all inputs
+  #’ and all outputs should be zero. So we set inbound edge coefficients as 1
+  #’ and outbound coefficients as -1. In any viable solution the result should
+  #’ be equal to zero.</p>
+
+<p>nodeflow &lt;- matrix(0,
+                     nrow = numberof_nodes,
+                     ncol = numberof_edges,
+                     dimnames = list(names_nodes, names_edges))</p>
+
+<p>for (i in names_nodes) {</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># input arcs
+edges_in &lt;- edges %&gt;%
+  filter(to == i) %&gt;%
+  select(ID) %&gt;%
+  unlist
+# output arcs
+edges_out &lt;- edges %&gt;%
+  filter(from == i) %&gt;%
+  select(ID) %&gt;%
+  unlist
+
+# set input coefficients to 1
+nodeflow[
+  rownames(nodeflow) == i,
+  colnames(nodeflow) %in% edges_in] &lt;- 1
+
+# set output coefficients to -1
+nodeflow[
+  rownames(nodeflow) == i,
+  colnames(nodeflow) %in% edges_out] &lt;- -1   }
+</code></pre>
+</div>
+
+<p># But exclude source and target edges
+  # as the zero-sum flow constraint does not apply to these!
+  # Source node is assumed to be the one with the minimum ID number
+  # Sink node is assumed to be the one with the maximum ID number
+  sourcenode_id &lt;- min(edges$from)
+  targetnode_id &lt;- max(edges$to)
+  # Keep node flow values for separate step below
+  nodeflow_source &lt;- nodeflow[rownames(nodeflow) == sourcenode_id,]
+  nodeflow_target &lt;- nodeflow[rownames(nodeflow) == targetnode_id,]
+  # Exclude them from node flow here
+  nodeflow &lt;- nodeflow[!rownames(nodeflow) %in% c(sourcenode_id, targetnode_id),]</p>
+
+<p># Add nodeflow to the constraints list
+  constraints$lhs &lt;- rbind(constraints$lhs, nodeflow)
+  constraints$dir &lt;- c(constraints$dir, rep(‘==’, times = nrow(nodeflow)))
+  constraints$rhs &lt;- c(constraints$rhs, rep(0, times = nrow(nodeflow)))</p>
+
+<p>#’ Build initialisation constraints ——————————————
+  #’ For the source and the target node, we want all outbound nodes and
+  #’ all inbound nodes to be equal to the sum of flow through the network
+  #’ respectively</p>
+
+<p># Add initialisation to the constraints list
+  constraints$lhs &lt;- rbind(constraints$lhs,
+                           source = nodeflow_source,
+                           target = nodeflow_target)
+  constraints$dir &lt;- c(constraints$dir, rep(‘==’, times = 2))
+  # Flow should be negative for source, and positive for target
+  constraints$rhs &lt;- c(constraints$rhs, total_flow * -1, total_flow)</p>
+
+<p>return(constraints)
+}</p>
+
+<p>constraintsMatrix &lt;- createConstraintsMatrix(edgelist, 30)
+```</p>
+
+<p>This should return something like this. We can see the rows corresponding to capacity constraints as lines with just a single 1 value in <code class="highlighter-rouge">lhs</code>, a <code class="highlighter-rouge">&lt;=</code> in <code class="highlighter-rouge">dir</code>, and the capacity of the corresponding edge in the <code class="highlighter-rouge">rhs</code>. Node flow constraints show as one row per node, 1 for incoming nodes and -1 for outgoing nodes, <code class="highlighter-rouge">==</code> in <code class="highlighter-rouge">dir</code>, and zero in <code class="highlighter-rouge">rhs</code>. Finally, the initialisation constraints are implemented with negative coefficients for all edges leaving the source node and positive coefficients for all edges reaching the target node.</p>
+
+<p>```r
+$lhs
+1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
+1       1  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+2       0  1  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+3       0  0  1  0  0  0  0  0  0  0  0  0  0  0  0  0
+4       0  0  0  1  0  0  0  0  0  0  0  0  0  0  0  0
+5       0  0  0  0  1  0  0  0  0  0  0  0  0  0  0  0
+6       0  0  0  0  0  1  0  0  0  0  0  0  0  0  0  0
+7       0  0  0  0  0  0  1  0  0  0  0  0  0  0  0  0
+8       0  0  0  0  0  0  0  1  0  0  0  0  0  0  0  0
+9       0  0  0  0  0  0  0  0  1  0  0  0  0  0  0  0
+10      0  0  0  0  0  0  0  0  0  1  0  0  0  0  0  0
+11      0  0  0  0  0  0  0  0  0  0  1  0  0  0  0  0
+12      0  0  0  0  0  0  0  0  0  0  0  1  0  0  0  0
+13      0  0  0  0  0  0  0  0  0  0  0  0  1  0  0  0
+14      0  0  0  0  0  0  0  0  0  0  0  0  0  1  0  0
+15      0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  0
+16      0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1
+2       1  0 -1 -1 -1  0  0  0  0  0  0  0  0  0  0  0
+3       0  1  0  0  0 -1 -1 -1  0  0  0  0  0  0  0  0
+4       0  0  1  0  0  1  0  0 -1 -1  0  0  0  0  0  0
+5       0  0  0  1  0  0  1  0  0  0 -1 -1  0  0  0  0
+6       0  0  0  0  1  0  0  1  0  0  0  0 -1 -1  0  0
+7       0  0  0  0  0  0  0  0  1  0  1  0  1  0 -1  0
+8       0  0  0  0  0  0  0  0  0  1  0  1  0  1  0 -1
+source -1 -1  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+target  0  0  0  0  0  0  0  0  0  0  0  0  0  0  1  1</p>
+
+<p>$dir
+[1] “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=” “&lt;=”
+[15] “&lt;=” “&lt;=” “==” “==” “==” “==” “==” “==” “==” “==” “==”</p>
+
+<p>$rhs
+[1]  20  30  99  99  99  99  99  99  99  99  99  99  99  99  99  99   0
+[18]   0   0   0   0   0   0 -30  30
+```</p>
+
+<p>We can now feed all of this information to <code class="highlighter-rouge">lpSolve</code> to calculate the optimal flow values of each edge. Our example is relatively small, but because all values are integers it will compile relatively fast, even for much larger number of edges. I have successfully run a similar version of this code for a network with several thousands of edges in less than a minute on my laptop.</p>
+
+<p>```r
+library(lpSolve)</p>
+
+<h1 id="run-lpsolve-to-find-best-solution">Run lpSolve to find best solution</h1>
+<p>solution &lt;- lp(
+  direction = ‘min’,
+  objective.in = edgelist$cost,
+  const.mat = constraintsMatrix$lhs,
+  const.dir = constraintsMatrix$dir,
+  const.rhs = constraintsMatrix$rhs)</p>
+
+<h1 id="print-vector-of-flow-by-edge">Print vector of flow by edge</h1>
+<p>solution$solution
+```</p>
+
+<h3 id="visualising-the-output">Visualising the Output</h3>
+<p>To finish off, we write the resulting solution back to the <code class="highlighter-rouge">igraph</code> object and visualise the flow in the optimal solution in a plot</p>
+
+<p>```r
+E(g)$flow &lt;- solution$solution</p>
+
+<h1 id="get-some-colours-in-to-visualise-cost">Get some colours in to visualise cost</h1>
+<p>E(g)$color[E(g)$cost == 0] &lt;- ‘royalblue’
+E(g)$color[E(g)$cost == 1] &lt;- ‘yellowgreen’
+E(g)$color[E(g)$cost == 2] &lt;- ‘gold’
+E(g)$color[E(g)$cost &gt;= 3] &lt;- ‘firebrick’</p>
+
+<h1 id="flow-as-edge-size">Flow as edge size,</h1>
+<p># cost as colour
+plot(g, edge.width = E(g)$flow)
+```</p>
+
+<p><img src="/assets/mincostflow_flow.jpeg" alt="network flow" /></p>
+
+<p>As you can see, the flow from node 1 is split between edges 1 and 2 because of the limiting capacity, even though this means that some of the flow will have to go from node 3 to node 5 at a higher cost. Expensive edges are avoided all together and have zero flow.</p>
+
+<hr />
+
+<p>That’s all for now, thanks for reading! I hope it is helpful for someone out there. If you have any comments, questions, or suggestions, please send me an email or tweet. Any feedback would be much appreciated.</p>
