@@ -1,0 +1,106 @@
+  <nav class="site-navbar"> 
+    <div class="site-wrap">
+		<div class="site-mobile-menu">
+		  <div class="site-mobile-menu-header">
+			<div class="site-mobile-menu-close mt-3">
+			  <span class="icon-close2 js-menu-toggle"></span>
+			</div>
+		  </div>
+		  <div class="site-mobile-menu-body"></div>
+		</div>
+    
+        <div class="row align-items-center">
+          <div class=" d-none d-xl-block">
+            <nav class="navbar site-navigation position-relative text-right" role="navigation">
+
+              <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
+                <li class="active"><a href="http://www.aeonlabs.solutions"><i class="fa fa-home"></i></a></li>
+
+                <li class="active"><a href="http://www.aeonlabs.solutions/opensource.aeonlabs.solutions">Open Source</a></li>
+
+                <li class="has-children">
+                  <a href="#">Edge Solutions</a>
+                  <ul class="dropdown">
+                    <li><a href="http://www.aeonlabs.solutions/invoiceauto.aeonlabs.solutions"><i class="fa fa-code"></i>&nbsp;Web & Apps</a></li>
+                    <li><a href="meeting.html"><i class="fa fa-calendar"></i>&nbsp;Schedule a meeting</a></li>
+                    <li><a href="safety.html"><i class="fa fa-shield"></i>&nbsp;Safety</a></li>
+                  </ul>
+                </li>                
+                                
+                <li class="has-children">
+                  <a href="#">Cloud Solutions</a>
+                  <ul class="dropdown">
+                    <li><a href="software.html"><i class="fa fa-code"></i>&nbsp;Web & Apps</a></li>
+                    <li><a href="meeting.html"><i class="fa fa-calendar"></i>&nbsp;Schedule a meeting</a></li>
+                    <li><a href="safety.html"><i class="fa fa-shield"></i>&nbsp;Safety</a></li>
+                  </ul>
+                </li>
+                
+                <li class="has-children">
+                  <a href="http://www.aeonlabs.solutions/businessTechDev.html">Business 5.0</a>
+                  <ul class="dropdown">
+                    <li><a href="advisory.html"><i class="fa fa-compass"></i>&nbsp;Technology Advisory</a></li>
+                    <li><a href="http://www.aeonlabs.solutions/businessTechDev.html"><i class="fa fa-compass"></i>&nbsp;Happening now</a></li>
+                    <li><a href="meeting.html"><i class="fa fa-calendar"></i>&nbsp;Schedule a meeting</a></li>
+                    <li><a href="http://www.store.aeonlabs.solutions"><i class="fa fa-shopping-bag"></i>&nbsp;App Store</a></li>
+                    <li><a href="shop.html"><i class="fa fa-shopping-bag"></i>&nbsp;IoT Assisted Shop</a></li>
+                  </ul>
+                </li>
+                
+                <li class="has-children">
+                  <a href="http://www.aeonlabs.solutions/research.aeonlabs.solutions"><i class="fa fa-flask"></i>&nbsp;R&D center</a>
+                  <ul class="dropdown">
+                    <li><a href="http://www.aeonlabs.solutions/research.aeonlabs.solutions"><i class="fa fa-flask"></i>&nbsp;Ongoing Research</a></li>
+                    <li><a href="http://www.aeonlabs.solutions/publications.aeonlabs.solutions"><i class="fa fa-book"></i>&nbsp;Publications</a></li>
+                    <li><a href="https://data.europa.eu/euodp/en/home"><i class="fa fa-book"></i>&nbsp;EU Open Data Portal</a></li>                   
+                  </ul>
+                </li>
+
+                <li class="has-children">
+                  <a href="socialnetworks.html"><i class="fa fa-twitter"></i>&nbsp;AeonLabs</a>
+                  <ul class="dropdown">
+                    <li><a href="socialnetworks.html"><i class="fa fa-twitter"></i>&nbsp;Media</a></li>
+                    <li><a href="contribute.html"><i class="fa fa-code"></i>&nbsp;Contributors</a></li>
+                    <li><a href="contact.html"><i class="fa fa-id-card"></i>&nbsp;Contact</a></li>
+                  </ul>
+                </li>
+
+
+                <li>                
+                	<a class="navbar-item" onclick="loadTranslate();" id="DispTrans" title="Translate" >
+                	<span class="spr-translate20"></span>
+                	
+                	<div id="loading"><i class="fa fa-language"></i>&nbsp;</div></a>
+       				
+       				<div id="google_translate_element" class="navbar-item"></div>
+       				
+					<script type="text/javascript">
+         			function googleTranslateElementInit() {
+	           			new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        			}
+
+					function loadTranslate(){
+						var l = document.getElementById("loading");
+							l.innerHTML="loading..";
+
+						var newScript = document.createElement('script');
+						newScript.type = 'text/javascript';
+						newScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+						document.getElementById("google_translate_element").appendChild(newScript);
+
+						try{
+						var b = document.getElementById("DispTrans");
+							b.style.display = "none";
+						}catch(error) { }
+					}
+           			</script>
+                </li>
+              </ul>
+            </nav>
+            
+          </div>
+
+          <div class="d-inline-block d-xl-none ml-md-0 mr-auto" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
+          </div>
+        </div>
+</nav>

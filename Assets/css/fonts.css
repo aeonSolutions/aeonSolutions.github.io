@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'SymbolsFabricIcons';
+    src: url(fabric.woff) format("woff");
+}
+@font-face {
+    font-family: 'SymbolsFluentIcons';
+    src: url(fluent.woff) format("woff");
+}
+@font-face {
+    font-family: 'SymbolsMaterialIcons';
+    src: url(material.woff) format("woff");
+}
+@font-face {
+    font-family: 'SymbolsLineAwesomeIcons';
+    src: url(lineawesome.woff) format("woff");
+}
+@font-face {
+    font-family: 'SymbolsFontAwesomeIcons';
+    src: url(fontawesome.woff) format("woff");
+}

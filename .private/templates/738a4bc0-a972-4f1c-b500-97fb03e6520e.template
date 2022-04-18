@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pf:PageTemplate xmlns:pf="http://schemas.getpagefabric.com/2020/pageTemplateDefinition" id="738a4bc0-a972-4f1c-b500-97fb03e6520e">
+<pf:PageLayoutProperties>pageSlim</pf:PageLayoutProperties>
+<pf:PageLayout>fb2ae4b1-fa7e-4623-aa1f-836631ac32b1</pf:PageLayout>
+<pf:Name><![CDATA[content_page_en]]></pf:Name>
+<pf:PageHeader>
+<![CDATA[
+
+
+<div class="pfBox height-auto"><div class="pfBox syncWithContentWidth"><pfhnav class="pfHNav pfHNav" menuid="beb420df5e2b41e3a0ae0d531b819516"></pfhnav>
+
+
+</div><div class="pfBox padding-5 text-white background-primary content-horizontal-align-center">
+    <div class="boxContent">
+      
+      <p style="text-align: center;">Some important text should go here.</p></div>
+    </div><div class="pfBox background-themeLighterAlt height-auto"><div class="pfBox syncWithContentWidth padding-0 height-105 content-vertical-align-center"><h1 class="text-primary"><span class="pfInlineLabel" editor-tag="pageTitle" contenteditable="false">{value}</span></h1></div>
+</div></div>
+
+
+]]>
+</pf:PageHeader>
+<pf:LeftSide>
+<![CDATA[
+
+
+<pfvnav class="pfVNav" menuid="1b21419e76094646b607f860712f3601"></pfvnav>
+
+
+
+
+
+]]>
+</pf:LeftSide>
+<pf:RightSide>
+<![CDATA[]]>
+</pf:RightSide>
+<pf:PageContent>
+<![CDATA[]]>
+</pf:PageContent>
+<pf:PageFooter>
+<![CDATA[
+
+<div class="pfBox background-themeLighterAlt padding-0 content-vertical-align-center height-180"><div class="pfBox syncWithContentWidth"><div class="pfCardContainer cardsColumns columns-25 columns-valign-top"><div class="pfCard padding-default background-trans">
+  <div class="cardPlaceholder">
+    <div class="cardContent">
+    <article>
+      <p><strong>About our website</strong></p><p><br></p><p>Lorem ipsum dolor sit amet.</p><p><br></p><p>(c) Company 2020.</p>
+      </article>
+    </div>
+  </div>
+</div><div class="pfCard padding-default background-trans">
+  <div class="cardPlaceholder">
+    <div class="cardContent">
+    <article>
+      <p><strong>Our products</strong></p><p><br></p><p>Lorem ipsum dolor sit amet.</p><p></p><p></p><p>Lorem ipsum dolor sit amet.</p><p>Lorem ipsum dolor sit amet.</p><p>Lorem ipsum dolor sit amet.</p><p></p><p></p>
+      </article>
+    </div>
+  </div>
+</div></div></div></div>
+
+]]>
+</pf:PageFooter>
+</pf:PageTemplate>

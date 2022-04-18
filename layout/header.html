@@ -1,0 +1,70 @@
+    <div class="tm-col-left">
+        <div class="tm-site-header media">
+            <img width="45px" style="margin-top: 5px; margin-right: 5px;" src="http://www.aeonlabs.solutions/main/layout/img/aeonlogo.png">
+            <div class="media-body">
+                <h1 class="tm-sitename">AeonLabs</h1>
+                <p class="tm-slogon" style="margin-top:-15px">Research & Prototyping</p>
+            </div>        
+        </div>
+    </div>
+
+    <div class="tm-col-right">
+        <nav class="navbar navbar-expand-lg" id="tm-main-nav">
+            <button class="navbar-toggler toggler-example mr-0 ml-auto" type="button" 
+                data-toggle="collapse" data-target="#navbar-nav" 
+                aria-controls="navbar-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span><i class="fa fa-bars" aria-hidden="true"></i></span>
+            </button>
+            <div class="collapse navbar-collapse tm-nav" id="navbar-nav">
+                <ul class="navbar-nav text-uppercase">
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" title="Read Technology related articles on SubStack.com" href="https://migueltomas.substack.com" style="color:white"><i><img class="img-simple" style="margin-right:20px;  margin-top: -5px;" src="http://www.aeonlabs.solutions/main/layout/img/substack.png" height="20px"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" href="https://dev.to/aeonlabs" title="Aeonlabs on DEV Community"><img class="img-simple" style="-webkit-filter: invert(1); filter: invert(1); margin-top: -5px;" src="https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg"  height="20"></a>            
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" href="http://www.aeonlabs.solutions/main/index.html"><i class="fa fa-home"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" href="http://www.aeonlabs.solutions/main/about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" href="http://www.aeonlabs.solutions/main/services.html">Lab<span class="sr-only"></span></a>
+                    </li>                            
+                    <li class="nav-item">
+                        <a class="nav-link tm-nav-link" href="http://www.aeonlabs.solutions/main/contact.html">Contact</a>
+                    </li>
+        
+                    <li  class="menu__item">
+                        <a class="navbar-item" onclick="loadTranslate();" id="DispTrans" title="Select another Language">
+                        <span class="spr-translate20"></span>
+                        <div id="loading"><i class="fa fa-language"></i></div></a>
+                           <div id="google_translate_element" class="navbar-item"></div>
+                           
+                            <script type="text/javascript">
+                            function googleTranslateElementInit() {
+                                new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                            }
+            
+                            function loadTranslate(){
+                                var l = document.getElementById("loading");
+                                    l.innerHTML="loading..";
+            
+                                var newScript = document.createElement('script');
+                                newScript.type = 'text/javascript';
+                                newScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                                document.getElementById("google_translate_element").appendChild(newScript);
+            
+                                try{
+                                var b = document.getElementById("DispTrans");
+                                    b.style.display = "none";
+                                }catch(error) { }
+                            }
+                            </script>                   
+                    </li>
+                </ul>                            
+            </div>                        
+        </nav>
+    </div>

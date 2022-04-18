@@ -1,0 +1,83 @@
+      <script>
+          var webRoot="http://www.aeonlabs.solutions/main/";
+      </script>
+      
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-F496TL8DME"></script>
+       <script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-F496TL8DME');
+      </script>
+
+    <link rel=icon href=favicon.png>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" /> <!-- https://fonts.google.com/ -->
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="http://www.aeonlabs.solutions/main/layout/css/bootstrap.min.css" rel="stylesheet" /> <!-- https://getbootstrap.com/ -->
+
+    <link href="http://www.aeonlabs.solutions/main/layout/css/aeonlabsmain.css" rel="stylesheet" />
+
+
+<script>
+    var isMobile = navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/);
+    if(isMobile){
+        let myElement = document.querySelector("#diagMask");
+        myElement.style.clipPath="polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+    }
+</script>
+
+    <div class="tm-container">        
+        <div id="diagMask" class="tm-container tm-container-mask">
+            <div class="tm-row pt-4"  id="include-header">
+                <script>
+                    $(function(){ $("#include-header").load(webRoot+"layout/header.html"); });
+                </script>                
+            </div>
+            
+            <div class="tm-row" id="include-main" >
+                <script>
+                    var url= window.location.href;
+                    var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
+                    var addr= url.replace(filename,'');
+                    $(function(){ $("#include-main").load(addr+filename.split('.')[0]+"-contents.html"); });
+                </script>
+            </div>
+
+            <div class="tm-row" style="margin-bottom: -16px;">
+                <div class="tm-col-left text-center" >            
+                    <ul class="tm-bg-controls-wrapper" >
+                        <li class="tm-bg-control active" data-id="0"></li>
+                        <li class="tm-bg-control" data-id="1"></li>
+                        <li class="tm-bg-control" data-id="2"></li>
+                        <li class="tm-bg-control" data-id="3"></li>
+                    </ul>            
+     
+                </div>
+            </div>  
+            
+        </div>        
+
+        <div id="include-footer" style="align-content: flex-end;  background: rgba(0, 0, 0, 0.4);">
+            <script>
+                $(function(){ $("#include-footer").load(webRoot+"layout/footer.html"); });
+            </script>
+        </div>
+    
+  
+        <div id="include-fbmessenger">
+            <script>
+                $(function(){ $("#include-fbmessenger").load(webRoot+"layout/fbmessenger.html"); });
+            </script>
+        </div>
+
+    </div>
+
+
+
+    <script src="http://www.aeonlabs.solutions/main/layout/js/bootstrap.min.js"></script>
+    <script src="http://www.aeonlabs.solutions/main/layout/js/jquery.backstretch.min.js"></script>
+    <script src="http://www.aeonlabs.solutions/main/layout/js/bg-rotating-script.js"></script>
