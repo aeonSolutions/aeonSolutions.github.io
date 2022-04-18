@@ -58,7 +58,7 @@ function AjxSilent(url,sourceText, lastOne){
 	ajaxRequest.open("GET", url, true);
 
 	
-	ajaxRequest.setRequestHeader("Access-Control-Allow-Origin", "http://www.aeonlabs.solutions");
+	ajaxRequest.setRequestHeader("Access-Control-Allow-Origin", "http://aeonSolutions.github.io");
     ajaxRequest.setRequestHeader("Content-Type", "text/plain");
     ajaxRequest.setRequestHeader("Pragma", "no-cache");
     ajaxRequest.setRequestHeader("Expires", "Fri, 01 Jan 1990 00:00:00 GMT");
