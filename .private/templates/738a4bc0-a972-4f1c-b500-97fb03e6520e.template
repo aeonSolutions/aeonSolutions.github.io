@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<pf:PageTemplate xmlns:pf="http://schemas.getpagefabric.com/2020/pageTemplateDefinition" id="738a4bc0-a972-4f1c-b500-97fb03e6520e">
+<pf:PageTemplate xmlns:pf="https://schemas.getpagefabric.com/2020/pageTemplateDefinition" id="738a4bc0-a972-4f1c-b500-97fb03e6520e">
 <pf:PageLayoutProperties>pageSlim</pf:PageLayoutProperties>
 <pf:PageLayout>fb2ae4b1-fa7e-4623-aa1f-836631ac32b1</pf:PageLayout>
 <pf:Name><![CDATA[content_page_en]]></pf:Name>

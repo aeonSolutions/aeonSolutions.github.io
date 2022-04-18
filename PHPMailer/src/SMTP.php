@@ -13,7 +13,7 @@
  * @copyright 2012 - 2020 Marcus Bointon
  * @copyright 2010 - 2012 Jim Jagielski
  * @copyright 2004 - 2009 Andy Prevost
- * @license   http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
+ * @license   https://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
  * @note      This program is distributed in the hope that it will be useful - WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE.
@@ -145,8 +145,8 @@ class SMTP
     /**
      * Whether to use VERP.
      *
-     * @see http://en.wikipedia.org/wiki/Variable_envelope_return_path
-     * @see http://www.postfix.org/VERP_README.html Info on VERP
+     * @see https://en.wikipedia.org/wiki/Variable_envelope_return_path
+     * @see https://www.postfix.org/VERP_README.html Info on VERP
      *
      * @var bool
      */
@@ -157,7 +157,7 @@ class SMTP
      * Default of 5 minutes (300sec) is from RFC2821 section 4.5.3.2.
      * This needs to be quite high to function correctly with hosts using greetdelay as an anti-spam measure.
      *
-     * @see http://tools.ietf.org/html/rfc2821#section-4.5.3.2
+     * @see https://tools.ietf.org/html/rfc2821#section-4.5.3.2
      *
      * @var int
      */
@@ -628,7 +628,7 @@ class SMTP
         }
 
         //The following borrowed from
-        //http://php.net/manual/en/function.mhash.php#27225
+        //https://php.net/manual/en/function.mhash.php#27225
 
         //RFC 2104 HMAC implementation for php.
         //Creates an md5 HMAC.
