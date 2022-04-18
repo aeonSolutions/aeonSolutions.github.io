@@ -1,6 +1,6 @@
 const initBg = (autoplay = true) => {
     const bgImgsNames = ['diagoona-bg-1.jpg', 'diagoona-bg-2.jpg', 'diagoona-bg-3.jpg', 'diagoona-bg-4.jpg'];
-    const bgImgs = bgImgsNames.map(img => "https://aeonSolutions.github.io/main/layout/img/" + img);
+    const bgImgs = bgImgsNames.map(img => "https://aeonSolutions.github.io/layout/img/" + img);
 
     $.backstretch(bgImgs, {duration: 17000, fade: 3000});
 
