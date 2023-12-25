@@ -122,7 +122,7 @@ header {
   background-size: cover;
   -o-background-size: cover;
   background-position: center;
-  background-image: url("https://github.com/aeonSolutions/aeonSolutions.github.io/blob/master/products/concretematurity/img/header.jpg");
+  background-image: url("https://raw.githubusercontent.com/aeonSolutions/aeonSolutions.github.io/master/products/concretematurity/img/header.jpg");
   text-align: center;
   color: white; }
   header .header-content {
