@@ -12,3 +12,12 @@ See it live in action at <https://volny.github.io/creative-theme-jekyll/>
 - Start by adding your info in `_config.yml`
 - In `_layouts/front.html` reorder or remove section as you prefer.
 
+## How to start
+
+- https://help.github.com/en/github/working-with-github-pages/creating-a-github-pages-site-with-jekyll
+
+### Set up locally
+
+bundle install --path vendor/bundle
+bundle update github-pages
+bundle exec jekyll serve

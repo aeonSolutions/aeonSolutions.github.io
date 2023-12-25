@@ -1,12 +1,294 @@
 # Site settings
-title: SMART CONCRETE MATURITY DEVICE
-email: mtpsilva@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
+title: MISE
+subtitle: Multidisciplinary Initiative for Space Exploration
+description: >
+  The Multidisciplinary Initiative for Space Exploration  (MISE) is to elevate the role of Chile in this field. MISE is
+  about strengthening both the space research conducted in Chile and developing related engineering sciences.
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "" # the base hostname & protocol for your site
-
-twitter_username: AeonlabsS
-github_username: aeonSolutions
+email: marina.stepanova@usach.cl
+logo: img/logos/mise.png
+header-image:
+  image: img/bg-space.jpg
+  attrib: Photo by Vincentiu Solomon on Unsplash
 
 # Build settings
 markdown: kramdown
+
+# Color settings (hex-codes without the leading hash-tag)
+color:
+  primary: 115268
+  secondary: 4C3B71
+  secondary-dark: 021F4B
+
+# Social
+# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
+social:
+  - title: twitter
+    url: https://twitter.com/mise
+  - title: envelope
+    url: mailto:marina.stepanova@usach.cl
+  - title: github
+    url: https://github.com/spel-uchile/mise
+
+
+# Custom settings
+# Uses font awesome icons name, without 'fa-' prefix. Examples:
+#  space-shuttle user-astronaut globe-americas satellite meteor satellite-dish
+# Use '>' after description:, so Jekyll will ignore the line breaks.
+research:
+  - name: Space physics and space weather
+    icon: sun
+    description: >
+      Our Sun is not only a source of light but also the source of a solar wind. The Earth’s magnetic field shields it
+      from such plasma flow, creating the magnetosphere similar to a turbulent wake behind an obstacle. Numerous
+      satellites have provided invaluable information about space plasmas, allowing us to understand the extreme
+      processes occurring in the near space, such as geomagnetic storms and substorms, which threaten human operations
+      both in space and on ground.
+
+  - name: Astronomy and astrophysics
+    icon: satellite-dish
+    description: >
+      Chile has unique conditions for space exploration and astronomy. We expect to keep contributing to this field in
+      three lines: techniques and technologies to keep clean skies for astronomical observations; astronomical
+      instruments for use in space; and space and planetary physics for stellar and exoplanetary systems
+
+  - name: Astrobiology and bioengineering
+    icon: dna
+    description: >
+      The hostile conditions of our neighbor planets direct the search of life to the microbial world. The discovery of
+      microbial communities in high and low temperature ecosystems such as those present in deep sea hypothermal vents
+      or the Dry Valleys and frozen lakes of Antarctica respectively, have extended our definition of  a habitability
+      zone where to find extraterrestrial life.
+
+  - name: Engineering science
+    icon: satellite
+    description: >
+      Engineering is key to achieve the scientific goals. We will develop Life in Extreme Environment Labs (LEEL) to
+      evaluate technology to sustain life and instruments to gather data to find candidates for aerial and
+      space missions. Leveraging from our experience in instrumentation, robotics, solar energy and mining, we will
+      focus on its development, transportation, deployment, maintenance and efficiency in space.
+
+partners:
+  - name: Universidad de Chile
+    short:  UCH
+    logo: uchile.png
+    url: https://uchile.cl
+
+  - name: Universidad de Santiago de Chile
+    short:  USACH
+    logo: usach.png
+    url: https://usach.cl
+
+  - name: Pontificia Universidad Catolica de Valpariso
+    short:  PUCV
+    logo:
+    url: https://www.pucv.cl/
+
+  - name: Universidad de Concepcion
+    short: UDEC
+    logo: udec.png
+    url: https://www.udec.cl/
+
+  - name: Universidad de La Serena
+    short: ULS
+    logo:
+    url: http://www.userena.cl/
+
+  - name: Comisión Chilena de Energía Nuclear
+    short: CCHEN
+    logo: cchen.png
+    url: https://www.cchen.cl/
+
+  - name: Universidad de Antofagasta
+    short: UA
+    logo:
+    url: http://www.uantof.cl/
+
+  - name: Universidad Catolica de la Santisima Concepcion
+    short: UCSC
+    logo:
+    url: https://www.ucsc.cl/
+
+  - name: Fundacion Biociencia
+    short: FB
+    logo: biociencia.png
+    url: http://www.bioscience.cl/
+
+projects:
+  - name: Space and Planetary Exploration Laboratoty (SPEL)
+    area: Engineering science
+    img: spel.jpg
+    url: http://spel.ing.uchile.cl/
+
+  - name: Intelligent Software Construction Laboratory (ISCLab)
+    area: Engineering science
+    img: isclab.jpg
+    url: https://isclab.dcc.uchile.cl
+
+  - name: Millimiter-wave laboratory
+    area: Astronomy and astrophysics
+    img: mmwlab.jpg
+    url: http://www.das.uchile.cl/lab_mwl/
+
+  - name: Laboratory for Space and Astrophysical Plasmas
+    area: Space physics and space weather
+    img: spacephysics.jpg
+    url: https://ccc.ciencias.uchile.cl/plasma/index.php
+
+  - name: Chilean Space Weather Lab
+    area: Space physics and space weather
+    img: spaceweather.jpg
+    url: https://ccc.ciencias.uchile.cl/climaespacial/index.php
+
+  - name: Fault Diagnosis and Failure Prognosis Laboratory
+    area: Engineering science
+    img: labprognosis.jpg
+    url: https://www.cec.uchile.cl/~morchard/
+
+  - name: Laboratory of Mechanical Vibrations and Rotodynamics
+    area: Engineering science
+    img: lvmr.jpg
+    url: http://www.lvmr.cl/lvmr.htm
+  
+  - name: Center for Interdisciplinary Research in Astrophysics and Space Exploration
+    area: Astronomy and Astrophysics, Space Physics and space weather, and Astrobiology
+    img: ciras.jpg
+    url: http://ciras.cl/
+
+team:
+  - name: Ricardo Finger
+    role: Associate Professor
+    afiliation: Universidad de Chile
+    img: rfinger.jpg
+    url: www.das.uchile.cl
+
+  - name: Juan Alejandro Valdivia
+    role: Associate professor
+    afiliation: Universidad de Chile
+    img: jvaldivia.jpg
+    url: https://macul.ciencias.uchile.cl/alejo
+
+  - name: Marina Stepanova
+    role: Associate Professor
+    afiliation: Universidad de Santiago de Chile
+    img: mstepanova.jpg
+    url: https://fisica.usach.cl/users/marina
+
+  - name: Marcos Diaz
+    role: Associate professor
+    afiliation: Universidad de Chile
+    img: mdiaz.jpg
+    url: http://ingenieria.uchile.cl/facultad/cuerpo-academico/92407/ingenieria-electrica?qui_id=13058
+
+  - name: Alexandre Bergel
+    role: Associate professor
+    afiliation: Universidad de Chile
+    img: abergel.jpg
+    url: http://bergel.eu/
+
+  - name: Roberto Navarro
+    role: Assistant professor
+    afiliation: Universidad de Concepcion
+    img: rnavarro.jpg
+    url: https://publons.com/researcher/V-7707-2018/
+
+  - name: Marcos Orchard
+    afiliation: Universidad de Chile
+    role: Associate professor
+    img: morchard.jpg
+    url: https://www.cec.uchile.cl/~morchard/
+
+  - name: Natalia Romanova
+    role: Associate professor
+    afiliation: Universidad de Santiago de Chile
+    img: nromanova.jpg
+    url:
+
+  - name: Cesar Azurdia
+    role: Assistant professor
+    afiliation: Universidad de Chile
+    img: cazurdia.jpg
+    url: http://ingenieria.uchile.cl/facultad/cuerpo-academico/92295/a-z?output=js&qui_id=119008
+
+  - name: Viviana Meruane
+    role: Associate professor
+    afiliation: Universidad de Chile
+    img: vmeruane.jpg
+    url: http://www.researcherid.com/rid/H-3816-2013
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+  - name: Researcher Name
+    role: Researcher
+    img: profile.jpg
+    url:
+
+#  - name: Jorge Ardilla
+#    role: Electrical Engineering Departmen Director
+#    afiliation: Universidad Técnica Federico Santa María
+#    img: jardilla.jpg
+#    url: https://jorgeardilarey.wixsite.com/website

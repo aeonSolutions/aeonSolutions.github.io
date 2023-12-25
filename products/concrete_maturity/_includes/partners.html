@@ -1,0 +1,23 @@
+<section id="partners">
+    <div class="container">
+        <div class="row text-center">
+            <h2 class="section-heading">Partners</h2>
+            <hr class="primary">
+        </div>
+        <div class="row" id="partners-grid">
+            {% for p in site.partners %}
+            <div class="col-sm-3 text-center">
+                <a href="{{ p.url }}">
+                    {% if p.logo %}
+                    <img src="img/logos/{{ p.logo }}" alt="{{ p.name }}" height="100px">
+                    {% else %}
+                    <i class="fas fa-4x fa-university text-muted">
+                        <h4>{{ p.name }}</h4>
+                    </i>
+                    {% endif %}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
