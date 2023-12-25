@@ -46,12 +46,6 @@ p {
     background-color: $theme-primary;
 }
 
-.bg-secondary {
-    background-color: $theme-secondary;
-    color: white;
-    border-color: white;
-}
-
 .bg-dark {
     background-color: $theme-dark;
     color: white;
@@ -73,7 +67,7 @@ aside {
     padding: 0;
 }
 
-// Navigatiosn
+// Navigation
 
 .navbar-default {
     background-color: white;
@@ -81,7 +75,6 @@ aside {
     @include sans-serif-font;
     @include transition-all;
     .navbar-header .navbar-brand {
-        padding: 5px 30px;
         color: $theme-primary;
         @include sans-serif-font;
         font-weight: 700;
@@ -151,11 +144,6 @@ aside {
                 }
             }
         }
-        &.affix-top {
-            img {
-                filter: brightness(100);
-            }
-        }
     }
 }
 
@@ -167,13 +155,13 @@ header {
     min-height: auto;
     @include background-cover;
     background-position: center;
-    background-image: url($header-image);
+    background-image: url('../img/header.jpg');
     text-align: center;
     color: white;
     .header-content {
         position: relative;
         text-align: center;
-        padding: 35vh 15px 35vh;
+        padding: 100px 15px 100px;
         width: 100%;
         .header-content-inner {
             h1 {
@@ -195,7 +183,7 @@ header {
     }
     @media (min-width: 768px) {
         min-height: 100%;
-        .background-imageheader-content {
+        .header-content {
             position: absolute;
             top: 50%;
             -webkit-transform: translateY(-50%);
@@ -224,11 +212,10 @@ header {
 }
 
 .service-box {
-    max-width: 500px;
-    min-height: 300px;
-    margin: 50px auto 50px;
+    max-width: 400px;
+    margin: 50px auto 0;
     @media (min-width: 992px) {
-        margin: 20px auto 20px;
+        margin: 20px auto 0;
     }
     p {
         margin-bottom: 0;
@@ -270,12 +257,6 @@ header {
             .project-name {
                 font-size: 18px;
             }
-            .team-role{
-                font-size: 60%;
-            }
-            .team-name{
-                font-size: 100%;
-            }
         }
     }
     &:hover {
@@ -291,12 +272,6 @@ header {
                 }
                 .project-name {
                     font-size: 22px;
-                }
-                .team-role{
-                    font-size: 60%;
-                }
-                .team-name{
-                    font-size: 100%;
                 }
             }
         }
@@ -374,17 +349,3 @@ body {
     -webkit-tap-highlight-color: $theme-dark;
 }
 
-.img-profile {
-    filter: grayscale(80%);
-}
-
-header .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: $theme-secondary;
-    opacity: 0.3;
-    z-index: 0;
-}
