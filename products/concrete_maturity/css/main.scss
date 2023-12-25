@@ -34,9 +34,9 @@
 // }
 
 // variables.less
-$theme-primary: #{{ site.color.primary }};
-$theme-secondary: #{{ site.color.secondary }};
-$theme-dark: #{{ site.color.secondary-dark }};
+$theme-primary: {{ site.color.primary }};
+$theme-secondary: {{ site.color.secondary }};
+$theme-dark: {{ site.color.secondary-dark }};
 $header-image: '../{{ site.header-image.image }}';
 
 // Import partials from `sass_dir` (defaults to `_sass`)
