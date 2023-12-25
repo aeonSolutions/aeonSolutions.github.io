@@ -41,6 +41,6 @@ $header-image: '../{{ site.header-image.image }}';
 
 // Import partials from `sass_dir` (defaults to `_sass`)
 @import
-        "mixins",
-        "base"
+        "_mixins",
+        "_base"
 ;
