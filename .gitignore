@@ -10,7 +10,6 @@ data/*
 *.csv
 *.tsv
 *.sav
-*.jpg
 *.Rdata
 *.rds
 
