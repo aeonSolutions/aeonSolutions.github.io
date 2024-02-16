@@ -33,7 +33,7 @@
       <link rel=icon href=favicon.png>
   
       <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" /> <!-- https://fonts.google.com/ -->
-      
+    
       <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
       <link href="https://aeonSolutions.github.io/layout/css/bootstrap.min.css" rel="stylesheet" /> <!-- https://getbootstrap.com/ -->
   
@@ -44,9 +44,7 @@
       <script src="https://aeonSolutions.github.io/layout/js/bootstrap.min.js"></script>
       <script src="https://aeonSolutions.github.io/layout/js/jquery.backstretch.min.js"></script>
   
-  
       <script src="https://aeonSolutions.github.io/layout/js/box_tilt.js"></script>
-  
       <script src="https://aeonSolutions.github.io/layout/js/bg-rotating-script.js"></script>
       
       <div class="tm-container"  style="background: rgba(0, 0, 0, 0.4);">        
@@ -56,7 +54,7 @@
                     var url= window.location.href;
                     var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
                     var addr= url.replace(filename,'');
-                    $(function(){ $("#include-main").load(addr+filename.split('.')[0]+"-header.html"); });
+                    $(function(){ $("#include-header").load(addr+filename.split('.')[0]+"-header.html"); });
                 </script>              
               </div>
               
