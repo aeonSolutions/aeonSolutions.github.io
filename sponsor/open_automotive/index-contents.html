@@ -5,12 +5,7 @@
                             <sup><small>latest revision of the circuit schematics for the OPEN ECU</small></sup>
                         </h2>
 
-                        <div class="box_viewer" tabindex="0">
-                            <div id="svgfile"></div>
-                            <script>
-                                $(function(){ $("#svgfile").load("test.svg"); });
-                            </script>
-
+                        <div id="svgfile" class="box_viewer" tabindex="0">
                             <ul class="kicadui">
                                 <li><label><div style="background:#840000"></div><input type="checkbox" name="layers" value="1" checked="">F.Cu</label></li>
                                 <li><label><div style="background:#008400"></div><input type="checkbox" name="layers" value="4" checked="">B.Cu</label></li>
@@ -25,7 +20,12 @@
                             </ul>
                             <form class="kicadfind"><input type="text" autocomplete="off" name="q" placeholder="Find..."></form>
                         </div>
+
                         <script>
+                            $.post('test.svg', function(data) {
+                              $('#svgfile').prepend(data);  
+                            });
+
                             $(function(){
                               var svg = document.getElementsByTagName('svg');
                               KiCadWebView.pcb(svg[0]);
