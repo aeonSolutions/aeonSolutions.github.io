@@ -2,8 +2,30 @@
 <script src="../../layout/js/jquery-3.7.1.min.js"></script>
 <script src='../../layout/js/KiCadWebView.min.js'></script>
 
+<style>
+  .box_viewer{
+    display: flex;
+    box-sizing: border-box;
+    padding: 5px;
+    margin-right: 15px;
+    margin-top: 30px;
+    margin-bottom: 15px;
 
-<div class="kicadwrap" tabindex="0">
+    width: 90%;
+    height: 600px;
+
+    border: 2px solid rgba(0, 0, 0, .15);
+    border-radius: 25px 25px 25px 25px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .25), inset 0 0 2px 0px white;
+    background: rgba(0, 0, 0, .0125);
+    overflow: hidden;
+    backdrop-filter: blur(13px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+</style>
+
+<div class="box_viewer" tabindex="0">
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="400" viewBox="-3967.6822330097093 9296 29627.18446601942 20344" xmlns:v="https://vecta.io/nano" class="kicadpcb" preserveAspectRatio="xMidYMin slice" style="padding-bottom: 68.67%;">
       <style>
         .B{stroke-linejoin:round}.C{stroke-linecap:round}.D{stroke-width:59.06}.E{stroke:none}.F{opacity:0}.G{text-anchor:middle}.H{fill-opacity:1}.I{fill-opacity:0}.J{font-size:524.93px}.K{fill-rule:evenodd}.L{stroke-width:39.37}.M{stroke-width:78.74}.N{stroke-width:118.11}.O{stroke-width:29.53}.P{stroke:#848400}.Q{font-size:787.4px}.R{stroke-width:47.24}.S{stroke-width:787}.T{font-size:262.47px}.U{fill:#848400}.V{stroke-width:98.43}.W{font-size:419.95px}.X{font-size:629.92px}.Y{fill:#840000}.Z{font-size:1049.87px}.a{stroke-width:0}.b{stroke-width:669.29}.c{stroke-width:19.68}.d{stroke-width:157.48}.e{stroke-width:295.28}.f{stroke-width:787.4}
@@ -40,7 +62,7 @@
       $(function(){
         var svg = document.getElementsByTagName('svg');
         KiCadWebView.pcb(svg[0]);
-        KiCadWebView.schematic(svg[1]);
+        //KiCadWebView.schematic(svg[1]);
         // Lazy load of other projects when user scrolls to end of page */
         $(window).scroll(function() {
           if ($(window).scrollTop()+130 >= $(document).height()-$(window).height()) {
