@@ -24,10 +24,9 @@
                         <script>
                             $.get("test.svg",function (data) { 
                                 $("#svgfile").append(data);
-                                $(function(){
-                                    var svg = document.getElementsByTagName('svg');
-                                    KiCadWebView.pcb(svg[0]);
-                                    //KiCadWebView.schematic(svg[1]);
+                                var svg = document.getElementsByTagName('svg');
+                                KiCadWebView.pcb(svg[0]);
+                                //KiCadWebView.schematic(svg[1]);
                                 });
                             });
                         </script>
