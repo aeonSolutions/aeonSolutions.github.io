@@ -5,27 +5,34 @@
                             <sup><small>latest revision of the circuit schematics for the OPEN ECU</small></sup>
                         </h2>
 
-                                <div class="box_viewer" tabindex="0">
-                                    <div id="svgfile"></div>
-                                    <script>
-                                      $(function(){ $("#svgfile").load("test.svg"); });
-                                    </script>
+                        <div class="box_viewer" tabindex="0">
+                            <div id="svgfile"></div>
+                            <script>
+                                $(function(){ $("#svgfile").load("test.svg"); });
+                            </script>
 
-                                      <ul class="kicadui">
-                                        <li><label><div style="background:#840000"></div><input type="checkbox" name="layers" value="1" checked="">F.Cu</label></li>
-                                        <li><label><div style="background:#008400"></div><input type="checkbox" name="layers" value="4" checked="">B.Cu</label></li>
-                                        <li><label><div style="background:#008484"></div><input type="checkbox" name="layers" value="7" checked="">F.SilkS</label></li>
-                                        <li><label><div style="background:#840084"></div><input type="checkbox" name="layers" value="3" checked="">B.SilkS</label></li>
-                                        <li><label><div style="background:#c2c2c2"></div><input type="checkbox" name="layers" value="5" checked="">Dwgs.User</label></li>
-                                        <li><label><div style="background:#ff0"></div><input type="checkbox" name="layers" value="9" checked="">Edge.Cuts</label></li>
-                                        <li><label><div style="background:#848484"></div><input type="checkbox" name="layers" value="2" checked="">F.CrtYd</label></li>
-                                        <li><label><div style="background:#c2c200"></div><input type="checkbox" name="layers" value="8" checked="">F.Fab</label></li>
-                                        <li><label><div style="background:#fff"></div><input type="checkbox" name="layers" value="6" checked="">Drill</label></li>
-                                        <li><label><div style="background:#848400"></div><input type="checkbox" name="layers" value="0" checked="">Hole.Pads</label></li>
-                                    </ul>
-                                    <form class="kicadfind"><input type="text" autocomplete="off" name="q" placeholder="Find..."></form>
+                            <ul class="kicadui">
+                                <li><label><div style="background:#840000"></div><input type="checkbox" name="layers" value="1" checked="">F.Cu</label></li>
+                                <li><label><div style="background:#008400"></div><input type="checkbox" name="layers" value="4" checked="">B.Cu</label></li>
+                                <li><label><div style="background:#008484"></div><input type="checkbox" name="layers" value="7" checked="">F.SilkS</label></li>
+                                <li><label><div style="background:#840084"></div><input type="checkbox" name="layers" value="3" checked="">B.SilkS</label></li>
+                                <li><label><div style="background:#c2c2c2"></div><input type="checkbox" name="layers" value="5" checked="">Dwgs.User</label></li>
+                                <li><label><div style="background:#ff0"></div><input type="checkbox" name="layers" value="9" checked="">Edge.Cuts</label></li>
+                                <li><label><div style="background:#848484"></div><input type="checkbox" name="layers" value="2" checked="">F.CrtYd</label></li>
+                                <li><label><div style="background:#c2c200"></div><input type="checkbox" name="layers" value="8" checked="">F.Fab</label></li>
+                                <li><label><div style="background:#fff"></div><input type="checkbox" name="layers" value="6" checked="">Drill</label></li>
+                                <li><label><div style="background:#848400"></div><input type="checkbox" name="layers" value="0" checked="">Hole.Pads</label></li>
+                            </ul>
+                            <form class="kicadfind"><input type="text" autocomplete="off" name="q" placeholder="Find..."></form>
                         </div>
-                            
+                        <script>
+                            $(function(){
+                              var svg = document.getElementsByTagName('svg');
+                              KiCadWebView.pcb(svg[0]);
+                              //KiCadWebView.schematic(svg[1]);
+                            });
+                        </script>
+
                         <br>
                         <p align="center">
                             <strong>
