@@ -18,16 +18,18 @@
                                 <li><label><div style="background:#fff"></div><input type="checkbox" name="layers" value="6" checked="">Drill</label></li>
                                 <li><label><div style="background:#848400"></div><input type="checkbox" name="layers" value="0" checked="">Hole.Pads</label></li>
                             </ul>
-                            <form class="kicadfind"><input type="text" autocomplete="off" name="q" placeholder="Find..."></form>
+                                <form class="kicadfind"><input type="text" autocomplete="off" name="q" placeholder="Find..."></form>
                         </div>
 
                         <script>
-                            $.get("test.svg",function (data) { 
-                                $("#svgfile").append(data);
-                                var svg = document.getElementsByTagName('svg');
-                                KiCadWebView.pcb(svg[0]);
-                                //KiCadWebView.schematic(svg[1]);
-                                });
+                            $.ajax({ type: "GET",   
+                                url: "test.svg",   
+                                success : function(text){
+                                    $('#svgfile').prepend(text);
+                                    var svg = document.getElementsByTagName('svg');
+                                    KiCadWebView.pcb(svg[0]);
+                                    //KiCadWebView.schematic(svg[1]);
+                                }
                             });
                         </script>
 
