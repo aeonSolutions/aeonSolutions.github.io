@@ -82,7 +82,7 @@ var KiCadWebView = {
     // Wrap element
     svg.setAttribute('class', 'kicad'+(pcb ? 'pcb' : 'schematic')); // className wrong type for svg
     wrap = document.createElement('div');
-    wrap.className = 'kicadwrap';
+    wrap.className = 'box_viewer';
     wrap.tabIndex = '0';
     svg.parentNode.insertBefore(wrap, svg);
     wrap.appendChild(svg);
