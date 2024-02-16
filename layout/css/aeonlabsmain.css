@@ -329,7 +329,7 @@ textarea {
     .tm-col-left { width: 40%; }
 
     .tm-col-right {
-        width: 80%;
+        width: 100%;
         padding-left: 100px;
         padding-right: 30px;
     }
