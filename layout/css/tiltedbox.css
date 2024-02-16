@@ -76,10 +76,16 @@
 .box_button{
     display: flex;
     box-sizing: border-box;
-    padding: 5px;
+
     margin-right: 15px;
     margin-top: 30px;
     margin-bottom: 15px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: inline;
 
     width: 100px;
     height: 50px;
