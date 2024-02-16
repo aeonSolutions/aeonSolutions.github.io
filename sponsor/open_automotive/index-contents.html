@@ -22,6 +22,7 @@
                         </div>
 
                         <script>
+                            /*
                             $.ajax({ type: "GET",   
                                 url: "test.svg",   
                                 success : function(text){
@@ -31,6 +32,15 @@
                                     //KiCadWebView.schematic(svg[1]);
                                 }
                             });
+
+                            */ 
+                            $.get("test.svg",function (data) { 
+                                $("#svgfile").append(data);
+                                var svg = document.getElementsByTagName('svg');
+                                KiCadWebView.pcb(svg[0]);
+                                //KiCadWebView.schematic(svg[1]);
+                                });
+                            
                         </script>
 
                         <br>
