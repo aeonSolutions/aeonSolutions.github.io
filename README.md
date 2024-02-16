@@ -9,8 +9,8 @@ Last change 16-02-2024
 
 This folder contains the web pages for all my open innovation projects. Each project is available with a [creative commons share alike non-commercial license](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) . If you like it and use it on your own projects please support this project, [click here](https://github.com/sponsors/aeonSolutions) to learn how. Starts with only $1 / 1€.<br> Thank you 🙏. 
 
-### Support all these open hardware projects and become a GitHub sponsor  
-Liked any of my PCB KiCad Designs? Help and Support my open work to all by becoming a GitHub sponsor.
+### Support all my open projects and become a GitHub sponsor  
+Liked any of my projects here on GitHub? Help and Support my open work to all by becoming a GitHub sponsor.
 
 <p align="center">
     <a href="https://github.com/aeonSolutions/PCB-Prototyping-Catalogue/blob/main/become_a_sponsor/aeonlabs-github-sponsorship-agreement.docx">
