@@ -7,7 +7,7 @@ Last change 16-02-2024
 
 <br>
 
-This folder contains the Web pages with all my open innovation projects. Each project is available with a [creative commons share alike non-commercial license](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) . If you like it and use it on your own hardware designs please support this project, [click here](https://github.com/sponsors/aeonSolutions) to learn how. <br> Thank you 🙏. 
+This folder contains the web pages for all my open innovation projects. Each project is available with a [creative commons share alike non-commercial license](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en) . If you like it and use it on your own projects please support this project, [click here](https://github.com/sponsors/aeonSolutions) to learn how. Starts with only $1 / 1€.<br> Thank you 🙏. 
 
 ### Support all these open hardware projects and become a GitHub sponsor  
 Liked any of my PCB KiCad Designs? Help and Support my open work to all by becoming a GitHub sponsor.
