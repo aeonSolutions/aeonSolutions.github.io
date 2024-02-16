@@ -22,9 +22,7 @@
                         </div>
 
                         <script>
-                            $.post('test.svg', function(data) {
-                              $('#svgfile').prepend(data);  
-                            });
+                            $.get("test.svg",function (data) { $("#svgfile").append(data);});
 
                             $(function(){
                               var svg = document.getElementsByTagName('svg');
