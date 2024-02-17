@@ -73,11 +73,6 @@
     text-align: center;
 }
 
-.box_nothing{
-    width: 100%;
-    height: 100%;
-}
-
 .box_button{
     display: flex;
     box-sizing: border-box;
@@ -104,6 +99,12 @@
     -webkit-backdrop-filter: blur(3px);
 }
 
+.box_loader{
+    display: flex;
+    width: 90%;
+    height: 600px;
+
+}
 
 .box_viewer{
     display: flex;
@@ -113,8 +114,8 @@
     margin-top: 30px;
     margin-bottom: 15px;
 
-    width: 90%;
-    height: 600px;
+    width: 100%;
+    height: 100%;
 
     border: 2px solid rgba(0, 0, 0, .15);
     border-radius: 25px 25px 25px 25px;
