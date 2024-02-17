@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function(){
-        $(function(){ $(".box_loader").load("test.svg", function(){
+        $(function(){ $("#svgfile").load("test.svg", function(){
             var svg = document.getElementsByTagName('svg');
             KiCadWebView.pcb(svg[0]);
             //KiCadWebView.schematic(svg[1]);
@@ -11,11 +11,11 @@
 
     <div class="wrapper">
         <h2 style="text-align: center;">
-            5-Open Hardware Electronics for the Volvo P2 Platform <br>
+            6-Open Hardware Electronics for the Volvo P2 Platform <br>
             <sup><small>latest revision of the circuit schematics for the OPEN ECU</small></sup>
         </h2>
 
-        <div class="box_loader"> </div>
+        <div id="svgfile" class="box_loader"> </div>
 
         <br>
         <p align="center">
