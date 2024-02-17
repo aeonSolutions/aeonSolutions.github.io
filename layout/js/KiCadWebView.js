@@ -4,18 +4,18 @@
 var KiCadWebView = {
   stdlayers: {
   "F.Cu": "#840000",
-  "In1.Cu": "#00f",     // same as F.Fab
-  "In2.Cu": "#c200c2",
-  "B.Cu": "#008400",
-  "F.SilkS": "#008484",
-  "B.SilkS": "#840084",
-  "Dwgs.User": "#c2c2c2",
-  "Edge.Cuts": "#ff0",  // same as F.Fab
-  "F.CrtYd": "#848484",
-  "F.Fab": "#c2c200",
-  "B.Fab": "#000084",
-  "Drill": "#fff",
-  "Hole.Pads": "#848400"},
+  "In1.Cu": "#CCC",     // same as F.Fab
+  "In2.Cu": "#DDD",
+  "B.Cu": "#4D7FC4",
+  "F.SilkS": "#F2EDA1",
+  "B.SilkS": "#E8B2A7",
+  "Dwgs.User": "#D0D2CD",
+  "Edge.Cuts": "#FFFFFF",  // same as F.Fab
+  "F.CrtYd": "#D864FF",
+  "F.Fab": "#02FFEE",
+  "B.Fab": "#c83434",
+  "Drill": "#ececec",
+  "Hole.Pads": "#00c2c2"},
   
   
   // Compute rough viewbox, ignoring curves, text, transforms, etc. Typically < 50ms
@@ -852,7 +852,11 @@ var SVGPanZoom = function () {
                         if (typeof value === "string") {
                             viewBox = parseViewBoxString(value);
                         } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === "object") {
-                            viewBox = extend({}, defaultViewBox, value);
+                            if ( isFinite(value["x"]) == false ){
+                              viewBox= defaultViewBox;  
+                            }else{
+                              viewBox = extend({}, defaultViewBox, value);
+                            }
                         } else {
                             throw new Error('initialViewBox is of invalid type');
                         }
@@ -920,7 +924,6 @@ var SVGPanZoom = function () {
             }
 
             var oldBox = _this.getViewBox();
-
             viewBox = {
                 x: !!x || x === 0 ? x : viewBox.x,
                 y: !!y || y === 0 ? y : viewBox.y,
