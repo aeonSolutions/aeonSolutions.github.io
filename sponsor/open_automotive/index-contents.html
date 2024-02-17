@@ -1,4 +1,14 @@
-           
+<script>
+    $(document).ready(function(){
+        $(function(){ $(".box_viewer").load("test.svg", function(){
+            var svg = document.getElementsByTagName('svg');
+            KiCadWebView.pcb(svg[0]);
+            //KiCadWebView.schematic(svg[1]);
+            });
+        });   
+    });
+</script>
+
                     <div class="wrapper">
                         <h2 style="text-align: center;">
                             Open Hardware Electronics for the Volvo P2 Platform <br>
@@ -6,17 +16,6 @@
                         </h2>
 
                         <div class="box_viewer" tabindex="0">  </div>
-
-                        <script>
-                            $(document).ready(function(){
-                                $(function(){ $(".box_viewer").load("test.svg", function(){
-                                    var svg = document.getElementsByTagName('svg');
-                                    KiCadWebView.pcb(svg[0]);
-                                    //KiCadWebView.schematic(svg[1]);
-                                    });
-                                });   
-                            });
-                        </script>
 
                         <br>
                         <p align="center">
