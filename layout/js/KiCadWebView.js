@@ -123,7 +123,7 @@ var KiCadWebView = {
       this._mousepos = {x:e.clientX, y:e.clientY};
     });
     // Rewrite SVG class/id names if already KiCad SVGs on page
-    if (document.getElementsByClassName('kicadwrap').length > 1) this.rewrite(svg);
+    if (document.getElementsByClassName('box_viewer').length > 1) this.rewrite(svg);
     return ui;
   },
   
@@ -436,7 +436,6 @@ var KiCadWebView = {
     this.initialise(svg, false, aspect);
   }
 };
-
 
 // SVGPanZoom.js
 (function (global, factory) {
