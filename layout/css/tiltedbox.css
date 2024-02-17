@@ -73,6 +73,11 @@
     text-align: center;
 }
 
+.box_nothing{
+    width: 100%;
+    height: 100%;
+}
+
 .box_button{
     display: flex;
     box-sizing: border-box;
