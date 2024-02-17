@@ -10,13 +10,14 @@
                         </div>
 
                         <script>
-                            $(function(){ $("#svgfile").load("test.svg", function(){
-                                var svg = document.getElementsByTagName('svg');
-                                KiCadWebView.pcb(svg[0]);
-                                //KiCadWebView.schematic(svg[1]);
-                                });
+                            $(document).ready(function(){
+                                $(function(){ $("#svgfile").load("test.svg", function(){
+                                    var svg = document.getElementsByTagName('svg');
+                                    KiCadWebView.pcb(svg[0]);
+                                    //KiCadWebView.schematic(svg[1]);
+                                    });
+                                });   
                             });
-
                         </script>
 
                         <br>
