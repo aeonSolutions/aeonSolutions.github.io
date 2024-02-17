@@ -1,32 +1,114 @@
-<link rel='stylesheet' type='text/css' href='../../layout/css/KiCadWebView.css' />
-<script src="../../layout/js/jquery-3.7.1.min.js"></script>
-<script src='../../layout/js/KiCadWebView.min.js'></script>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
 
-<style>
-  .box_viewer{
-    display: flex;
-    box-sizing: border-box;
-    padding: 5px;
-    margin-right: 15px;
-    margin-top: 30px;
-    margin-bottom: 15px;
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>AeonLabs's Hardware Electronics</title>
 
-    width: 90%;
-    height: 800px;
+    </head>
 
-    border: 2px solid rgba(0, 0, 0, .15);
-    border-radius: 25px 25px 25px 25px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, .25), inset 0 0 2px 0px white;
-    background: rgba(0, 0, 0, .0125);
-    overflow: hidden;
-    backdrop-filter: blur(13px);
-    -webkit-backdrop-filter: blur(3px);
-}
+    <body id="include-body">
 
-</style>
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" /> <!-- https://fonts.google.com/ -->
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+      <link href="https://aeonSolutions.github.io/layout/css/bootstrap.min.css" rel="stylesheet" /> <!-- https://getbootstrap.com/ -->
+  
+      <link href="https://aeonSolutions.github.io/layout/css/aeonlabsmain.css" rel="stylesheet" />
+      <link href="https://aeonSolutions.github.io/layout/css/tiltedbox.css" rel="stylesheet" />
+  
+      <link rel='stylesheet' type='text/css' href='https://aeonSolutions.github.io/layout/css/KiCadWebView.css' />
 
-<div class="box_viewer" tabindex="0">
-<div id="svgfile"></div>
+      <script src='https://aeonSolutions.github.io/layout/js/KiCadWebView.min.js'></script>
+
+      <script src="https://aeonSolutions.github.io/layout/js/jquery-3.7.1.min.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/bootstrap.min.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/jquery.backstretch.min.js"></script>
+  
+      <script src="https://aeonSolutions.github.io/layout/js/box_tilt.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/bg-rotating-script.js"></script>
+
+
+      <div class="tm-container"  style="background: rgba(0, 0, 0, 0.4);">        
+        <div class="tm-container">
+            <div class="tm-row pt-4"  id="include-header">
+              <script>
+                  var url= window.location.href;
+                  var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
+                  var addr= url.replace(filename,'');
+                  $(function(){ $("#include-header").load(addr+filename.split('.')[0]+"-header.html"); });
+              </script>              
+            </div>
+            
+            <div class="tm-row" id="include-main" >
+                <script>
+                    var url= window.location.href;
+                    var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
+                    var addr= url.replace(filename,'');
+                    $(function(){ $("#include-main").load(addr+filename.split('.')[0]+"-contents.html"); });
+                </script>
+            </div>
+
+            <div class="tm-row" style="margin-bottom: -16px;">
+                <div class="tm-col-left text-center" >            
+                    <ul class="tm-bg-controls-wrapper" >
+                        <li class="tm-bg-control active" data-id="0"></li>
+                        <li class="tm-bg-control" data-id="1"></li>
+                        <li class="tm-bg-control" data-id="2"></li>
+                        <li class="tm-bg-control" data-id="3"></li>
+                    </ul>            
+     
+                </div>
+            </div>  
+            
+        </div>        
+
+        <div id="include-footer" style="align-content: flex-end;  background: rgba(0, 0, 0, 0.4);">
+            <script>
+                $(function(){ $("#include-footer").load(webRoot+"layout/footer.html"); });
+            </script>
+        </div>
+    <!--
+        <div id="include-fbmessenger">
+            <script>
+                $(function(){ $("#include-fbmessenger").load(webRoot+"layout/fbmessenger.html"); });
+            </script>
+        </div>
+-->
+    </div>
+
+
+<div class="wrapper">
+  <h2 style="text-align: center;">
+      8-Open Hardware Electronics for the Volvo P2 Platform <br>
+      <sup><small>latest revision of the circuit schematics for the OPEN ECU</small></sup>
+  </h2>
+
+  <div class="box_loader"> </div>
+
+  <div style="width: 100%;">&nbsp; </div>
+  <p align="center">
+      <strong>
+          <a href="https://aeonsolutions.github.io/sponsor/open_automotive/pcb_layout.html">View the PCB Layout</a>
+      </strong>
+  </p>
+
+  <div style="width: 100%;"><p align="center"><strong>Download below, ready to load into your favorite EDA Software or App</strong></p></div>
+
+  <div class="box_button">
+      <p align="center">
+          <strong>
+              <a href="https://github.com/sponsors/aeonSolutions?frequency=one-time&sponsor=aeonSolutions">$50 one-time sponsor</a>
+          </strong>
+      </p>
+  </div>
+</div>
+
 <script>
   $(function(){ $("#svgfile").load("test.svg"); });
 </script>
@@ -35,16 +117,15 @@
     </div>
 
     <script>
-      $(function(){
-        var svg = document.getElementsByTagName('svg');
-        KiCadWebView.pcb(svg[0]);
-        //KiCadWebView.schematic(svg[1]);
-        // Lazy load of other projects when user scrolls to end of page */
-        $(window).scroll(function() {
-          if ($(window).scrollTop()+130 >= $(document).height()-$(window).height()) {
-            $(this).off();
-            $("#projects").load('../projects.php?path='+window.location.pathname);
-          }
-        });
+      $(document).ready(function(){
+          $(function(){ $(".box_loader").load("test.svg", function(){
+              var svg = document.getElementsByTagName('svg');
+              KiCadWebView.pcb(svg[0]);
+              //KiCadWebView.schematic(svg[1]);
+              });
+          });   
       });
-      </script>
+  </script>
+
+  </body> 
+  </html>
