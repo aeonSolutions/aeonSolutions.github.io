@@ -58,7 +58,7 @@
                     var url= window.location.href;
                     var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
                     var addr= url.replace(filename,'');
-                    $(function(){ $("#include-header").load(addr+filename.split('.')[0]+"-header.html"); });
+                    $(function(){ $("#include-header").load(addr+"index-header.html"); });
                 </script>              
               </div>
               
