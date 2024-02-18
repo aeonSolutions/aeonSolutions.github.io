@@ -1,0 +1,36 @@
+<script>
+    $(document).ready(function(){
+        $(function(){ $(".box_loader").load("schematics.svg", function(){
+            var svg = document.getElementsByTagName('svg');
+            KiCadWebView.schematic(svg[0]);
+            });
+        });   
+    });
+</script>
+
+    <div class="wrapper">
+        <h2 style="text-align: center;">
+            Open Hardware Electronics for the Volvo P2 Platform <br>
+            <sup><small>latest revision of the circuit schematics for the OPEN ECU</small></sup>
+        </h2>
+
+        <div class="box_loader"> </div>
+
+        <div style="width: 100%;">&nbsp; </div>
+        <p align="center">
+            <strong>
+                <a href="https://aeonsolutions.github.io/sponsor/open_automotive/ecu/index.html">View the PCB Layout</a>
+            </strong>
+        </p>
+
+        <div style="width: 100%;"><p align="center"><strong>Download below, ready to load into your favorite EDA Software or App</strong></p></div>
+
+        <div class="box_button">
+            <p align="center">
+                <strong>
+                    <a href="https://github.com/sponsors/aeonSolutions?frequency=one-time&sponsor=aeonSolutions">$200 one-time sponsor</a>
+                </strong>
+            </p>
+        </div>
+    </div>
+               
