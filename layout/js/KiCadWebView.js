@@ -3,17 +3,17 @@
 // by Nikki Smith, see https://climbers.net/sbc/kicad-web-viewer/
 var KiCadWebView = {
   stdlayers: {
-  "F.Cu": "#840000",
-  "In1.Cu": "#CCC",     // same as F.Fab
+  "F.Cu": "#c83434",      //ok
+  "In1.Cu": "#CCC",       // same as F.Fab
   "In2.Cu": "#DDD",
-  "B.Cu": "#4D7FC4",
-  "F.SilkS": "#F2EDA1",
-  "B.SilkS": "#E8B2A7",
+  "B.Cu": "#4d7fc4",      //ok
+  "F.SilkS": "#F2EDA1",   //ok 
+  "B.SilkS": "#E8B2A7",   //ok
   "Dwgs.User": "#D0D2CD",
-  "Edge.Cuts": "#FFFFFF",  // same as F.Fab
+  "Edge.Cuts": "#ECECEC", // ok
   "F.CrtYd": "#D864FF",
   "F.Fab": "#02FFEE",
-  "B.Fab": "#c83434",
+  "B.Fab": "#",
   "Drill": "#ececec",
   "Hole.Pads": "#00c2c2"},
   
@@ -299,7 +299,12 @@ var KiCadWebView = {
             toggle[k].style.display = show ? '' : 'none'
           }
         } else {
-          if (!els) els = svg.querySelectorAll('[fill]');
+          // Uncompressed SVGs from KiCad use style='fill:  << === this is really slowwwwww !!'
+          els = svg.querySelectorAll('[style]');
+          var isKiCad = false;
+          if (els.length<1){ 
+            els = svg.querySelectorAll('[fill]');
+          }
           els[j].style.display = show ? '' : 'none'
         }
       }
@@ -311,7 +316,7 @@ var KiCadWebView = {
     }
     // Add checkbox for layer 'name' to UI
     function addlayer(c,v,name){
-      return "<li><label><div style='background:"+c+"'></div><input type='checkbox' name='layers' value='"+v+"' checked>"+name+"</label></li>"
+      return "<li><label><div style='background:"+c+"'></div>&nbsp;&nbsp;<input type='checkbox' name='layers' value='"+v+"' checked>"+name+"</label></li>"
     };
     // PCB only keyboard shortcuts
     function pcb_keydown(e) {
@@ -345,7 +350,7 @@ var KiCadWebView = {
     // pass through if "#rrggbb" (IE), or null if unrecognised
     // by Slai https://stackoverflow.com/a/46258157
     function rgb2Hex(s) {
-      if (s[0] == '#') return s;
+      if (s[0] == '#') return s.toLowerCase();
       var hex = s.match(/[0-9]+/g);
       return hex ? hex.reduce(function(a, b){ 
         return a+(b|256).toString(16).slice(1)
@@ -356,11 +361,18 @@ var KiCadWebView = {
     var ui = this.initialise(svg, true, aspect);
     svg.parentNode.addEventListener("keydown", pcb_keydown);
     // Convert custom layer rgb() colours to hex?
+        
     if (mylayers) {
       for (var key in mylayers) {
         mylayers[key] = rgb2Hex(mylayers[key])
       }
     } else mylayers = this.stdlayers;
+    
+    // change colors to lowercase
+    for (var key in mylayers) {
+      mylayers[key]= mylayers[key].toLowerCase();
+    }
+
     // Compressed SVGs have classes that declare fills
     var rules = this.getsheet(svg).cssRules;
     var cols = [];
@@ -377,14 +389,22 @@ var KiCadWebView = {
       }
     };
     // Uncompressed SVGs from KiCad use style='fill:'
-    //var els = svg.querySelectorAll('[style]');
-    //for (var i = 0; i < els.length; i++) {
-    //  var c = rgb2Hex(el.style.fill);
-    // Compressed SVGs have individual elements with fill= attribute
-    var els = svg.querySelectorAll('[fill]');
+    var els = svg.querySelectorAll('[style]');
+    var isKiCad = false;
+    if (els.length>0){ 
+      isKiCad= true;
+    }else{
+      var els = svg.querySelectorAll('[fill]');
+    }
+    //Compressed SVGs have individual elements with fill= attribute
+   var c;
     for (var i = 0; i < els.length; i++) {
       var el = els[i];
-      var c = el.getAttribute('fill');
+      if (isKiCad){
+        c = rgb2Hex(el.style.fill);
+      }else{
+        c = el.getAttribute('fill');
+      }
       var ci = cols.indexOf(c);
       if (ci == -1) {
         cols.push(c);
@@ -396,35 +416,46 @@ var KiCadWebView = {
       // check if parentNode is in layers[] but different colour, and remove it
       // if same colour, then remove child
       // needed for raw KiCad output, but not with Nano compression
-      /*el.x_ci = ci;
-      el.x_i = i;
-      var pel = el.parentNode;
-      if (pel.hasOwnProperty('x_ci')) {
-        if (pel.x_ci != ci) {
-          console.log('child different colour from parent',ci,pel.x_ci);
-          var li = layers[pel.x_ci].indexOf(pel.x_i);
-          layers[pel.x_ci].splice(li,1);
-          delete pel.x_ci;
-        } else {
-          console.log('child same colour as parent',ci,pel.x_ci);
-          layers[ci].pop();
-        }
-      } */
-    }
-    // Create UI for toggling layers on/off
-    for (var key in mylayers) {
-      var ci = cols.indexOf(mylayers[key]);
-      if (ci != -1) {
-        ui.innerHTML += addlayer(mylayers[key], ci, key);
-        cols[ci] = null;
+      if (isKiCad){
+        el.x_ci = ci;
+        el.x_i = i;
+        var pel = el.parentNode;
+        if (pel.hasOwnProperty('x_ci')) {
+          if (pel.x_ci != ci) {
+            console.log('child different colour from parent',ci,pel.x_ci);
+            var li = layers[pel.x_ci].indexOf(pel.x_i);
+            layers[pel.x_ci].splice(li,1);
+            delete pel.x_ci;
+          } else {
+            console.log('child same colour as parent',ci,pel.x_ci);
+            layers[ci].pop();
+          }
+        } 
       }
     }
+
     // any layers in SVG that are missing from 'mylayers'?
-    for (var i = 0; i < cols.length; i++) {
-      if (cols[i]) ui.innerHTML += addlayer(cols[i], i, "Layer#"+i);
+    var count = 1;
+    for (var i = 0; i < cols.length; i++){
+      var hasStdLayer = "-1";
+      for (var key in this.stdlayers){
+        if (cols[i]){
+          if (cols[i] == this.stdlayers[key]){
+            hasStdLayer = key;
+          }
+        } 
+      }
+      if (cols[i]){
+        if (hasStdLayer == "-1") ui.innerHTML += addlayer(cols[i], i,  "&nbsp;Layer " + count );
+        if (hasStdLayer !="-1") ui.innerHTML += addlayer(cols[i], i, "&nbsp;" + hasStdLayer);
+        count ++;
+      }
     }
+
     if (!cols.length) throw Error("KiCadWebView found no layers in PCB, should be compressed");
     ui.addEventListener('click', togglelayer);
+
+
   },
   
   
