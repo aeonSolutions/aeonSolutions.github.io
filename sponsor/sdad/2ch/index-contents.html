@@ -34,13 +34,11 @@
             </p>
         </div>   
 
-        <div class="box_button">
-            <p align="center">
-                <strong>
-                    <a href="">Web Firmware Installation</a>
-                </strong>
-            </p>
-        </div>
+        <esp-web-install-button manifest="https://firmware.esphome.io/esp-web-tools/manifest.json">
+            <button  class="box_button" style="color: white;" slot="activate">Web Firmware Installation</button>
+            <span slot="unsupported">Ah snap, your browser doesn't work!</span>
+            <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
+        </esp-web-install-button>
 
         <div class="box_button">
             <p align="center">
