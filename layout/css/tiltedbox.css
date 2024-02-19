@@ -99,6 +99,11 @@
     -webkit-backdrop-filter: blur(3px);
 }
 
+.box_button:hover{
+    transform:translate3d(0,-10px,20px);
+    color:gray;
+}
+
 .box_loader{
     display: flex;
     width: 90%;
