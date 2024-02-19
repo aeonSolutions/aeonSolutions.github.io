@@ -13,7 +13,7 @@
     </head>
 
     <body id="include-body">
-        <script src="../../layout/js/jquery-3.7.1.min.js"></script>
+        <script src="https://aeonSolutions.github.io/layout/js/jquery-3.7.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
         
         <script>
@@ -57,8 +57,7 @@
                 <script>
                     var url= window.location.href;
                     var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
-                    var addr= url.replace(filename,'');
-                    $(function(){ $("#include-header").load(addr+filename.split('.')[0]+"-header.html"); });
+                    $(function(){ $("#include-header").load(webRoot+"portfolio/hardware_electronics/automotive/index-header.html"); });
                 </script>              
               </div>
               
