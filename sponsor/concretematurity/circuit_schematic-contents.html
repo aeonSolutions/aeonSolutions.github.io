@@ -1,0 +1,58 @@
+<script>
+    $(document).ready(function(){
+        $(function(){ $(".box_loader").load("schematics.svg", function(){
+            var svg = document.getElementsByTagName('svg');
+            KiCadWebView.schematic(svg[0]);
+            });
+        });   
+    });
+</script>
+
+    <div class="wrapper">
+        <h2 style="text-align: center;">
+            Smart Concrete - real time monitor of fresh concrete on-site <br>
+            <sup><small>latest revision of the circuit schematics</small></sup>
+        </h2>
+
+        <div class="box_loader"> </div>
+
+        <div style="width: 100%;">&nbsp; </div>
+        
+        <div class="box_button">
+            <p align="center">
+                <strong>
+                    <a style="text-decoration: none;;" href="https://aeonsolutions.github.io/sponsor/concretematurity/index.html">View the PCB Layout</a>
+                </strong>
+            </p>
+        </div>
+        
+        <div class="box_button">
+            <p align="center">
+                <strong>
+                    <a style="text-decoration: none;;" href="https://github.com/sponsors/aeonSolutions?frequency=one-time&sponsor=aeonSolutions">$200 one-time sponsor</a>
+                </strong>
+            </p>
+        </div>   
+
+        <esp-web-install-button manifest="https://firmware.esphome.io/esp-web-tools/manifest.json">
+            <button  class="box_button" style="color: white;" slot="activate">Web Firmware Install</button>
+        </esp-web-install-button>
+
+        <div class="box_button">
+            <p align="center">
+                <strong>
+                    <a style="text-decoration: none;;" href="http://www.tindie.com/stores/aeonlabs">Buy ready to use</a>
+                </strong>
+            </p>
+        </div>
+        <div style="width: 100%;"">
+            <p align="center">
+            <strong>
+                Download this file ready to load into your favorite EDA Software or App with a one-time sponsorship
+            </strong> <br>
+            <sup>The firmware update only works on the Edge and Chorme browsers and requires a HTTPS connection</sup>
+            </p>
+        </div>
+
+    </div>
+               
