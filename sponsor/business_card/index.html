@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>AeonLabs's Hardware Electronics</title>
+
+    </head>
+
+    <body id="include-body">
+        <script src="../../layout/js/jquery-3.7.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+        
+        <script>
+            var webRoot="https://aeonSolutions.github.io/";
+        </script>
+        
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+         <script async src="https://www.googletagmanager.com/gtag/js?id=G-F496TL8DME"></script>
+         <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+  
+        gtag('config', 'G-F496TL8DME');
+        </script>
+  
+      <link rel=icon href=favicon.png>
+  
+      <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet" /> <!-- https://fonts.google.com/ -->
+    
+      <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+      <link href="https://aeonSolutions.github.io/layout/css/bootstrap.min.css" rel="stylesheet" /> <!-- https://getbootstrap.com/ -->
+  
+      <link href="https://aeonSolutions.github.io/layout/css/aeonlabsmain.css" rel="stylesheet" />
+      <link href="https://aeonSolutions.github.io/layout/css/tiltedbox.css" rel="stylesheet" />
+  
+      <link rel='stylesheet' type='text/css' href='https://aeonSolutions.github.io/layout/css/KiCadWebView.css' />
+
+      <script src='https://aeonSolutions.github.io/layout/js/KiCadWebView.js'></script>
+
+      <script src="https://aeonSolutions.github.io/layout/js/jquery-3.7.1.min.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/bootstrap.min.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/jquery.backstretch.min.js"></script>
+  
+      <script src="https://aeonSolutions.github.io/layout/js/box_tilt.js"></script>
+      <script src="https://aeonSolutions.github.io/layout/js/bg-rotating-script.js"></script>
+      
+      <script type="module" src="https://unpkg.com/esp-web-tools@3.4.2/dist/web/install-button.js?module"></script>
+
+      <div class="tm-container"  style="background: rgba(0, 0, 0, 0.4);">        
+          <div class="tm-container">
+              <div class="tm-row pt-4"  id="include-header">
+                <script>
+                    var url= window.location.href;
+                    var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
+                    $(function(){ $("#include-header").load(webRoot+"portfolio/hardware_electronics/small_enterprises/index-header.html"); });
+                </script>              
+              </div>
+              
+              <div class="tm-row" id="include-main" >
+                  <script>
+                      var url= window.location.href;
+                      var filename = ( (url.split('/').pop()=="") ? "index.html": url.split('/').pop());
+                      var addr= url.replace(filename,'');
+                      $(function(){ $("#include-main").load(addr+filename.split('.')[0]+"-contents.html"); });
+                  </script>
+              </div>
+  
+              <div class="tm-row" style="margin-bottom: -16px;">
+                  <div class="tm-col-left text-center" >            
+                      <ul class="tm-bg-controls-wrapper" >
+                          <li class="tm-bg-control active" data-id="0"></li>
+                          <li class="tm-bg-control" data-id="1"></li>
+                          <li class="tm-bg-control" data-id="2"></li>
+                          <li class="tm-bg-control" data-id="3"></li>
+                      </ul>            
+       
+                  </div>
+              </div>  
+              
+          </div>        
+  
+          <div id="include-footer" style="align-content: flex-end;  background: rgba(0, 0, 0, 0.4);">
+              <script>
+                  $(function(){ $("#include-footer").load(webRoot+"layout/footer.html"); });
+              </script>
+          </div>
+      <!--
+          <div id="include-fbmessenger">
+              <script>
+                  $(function(){ $("#include-fbmessenger").load(webRoot+"layout/fbmessenger.html"); });
+              </script>
+          </div>
+  -->
+      </div>
+    </body>
+</html>
